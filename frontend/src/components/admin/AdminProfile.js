@@ -65,6 +65,15 @@ function AdminProfile() {
             </button>
 
             <button
+              className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+              onClick={() => {
+                navigate("/admin/user");
+              }}
+            >
+              Home page
+            </button>
+
+            <button
               className="w-full px-4 py-2 mt-4 font-bold text-white bg-red-500 rounded-full hover:bg-red-700 focus:outline-none focus:shadow-outline"
               onClick={handleLogout}
             >

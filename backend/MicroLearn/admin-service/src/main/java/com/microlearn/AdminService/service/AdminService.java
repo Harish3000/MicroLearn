@@ -1,9 +1,9 @@
 package com.microlearn.AdminService.service;
 
 import com.microlearn.AdminService.entity.Admin;
-import com.microlearn.AdminService.entity.AppCourse;
+import com.microlearn.AdminService.entity.Course;
 import com.microlearn.AdminService.repo.AdminRepo;
-import com.microlearn.AdminService.repo.AppCourseRepo;
+import com.microlearn.AdminService.repo.CourseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,71 +17,67 @@ import java.util.Map;
 @Service
 public class AdminService {
 
-    @Autowired
-    private AdminRepo adminRepo;
+
+
 
     @Autowired
-    private AppCourseRepo appCourseRepo;
+    private CourseRepo courseRepo;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public Admin getAdminById(String id){
-        return adminRepo.findById(id).get();
+
+
+//    public ResponseEntity<Object> getAllCourses() {
+//        ResponseEntity<List> response = restTemplate.getForEntity("http://instructor-service:9092/instructor/courses", List.class);
+//        List<Object> courses = response.getBody();
+//
+//        List<Object> courseDetails = new ArrayList<>();
+//        for(Object course : courses){
+//            Map<String, Object> courseMap = (Map<String, Object>) course;
+//            courseDetails.add(courseMap);
+//        }
+//
+//        Map<String, Object> responseMap = new LinkedHashMap<>();
+//        responseMap.put("courses", courseDetails);
+//
+//        return ResponseEntity.ok().body(responseMap);
+//    }
+
+    //new ones ---------------------------------------------------------------------------
+    public Course createCourse(Course course) {
+        return courseRepo.save(course);
     }
 
-    public Admin insertAdmin(Admin admin){
-        return adminRepo.save(admin);
+    public Course getCourseById(String id) {
+        return courseRepo.findById(id).orElse(null);
     }
 
-    public ResponseEntity<Object> getAllCourses() {
-        ResponseEntity<List> response = restTemplate.getForEntity("http://instructor-service:9092/instructor/courses", List.class);
-        List<Object> courses = response.getBody();
-
-        List<Object> courseDetails = new ArrayList<>();
-        for(Object course : courses){
-            Map<String, Object> courseMap = (Map<String, Object>) course;
-            courseDetails.add(courseMap);
-        }
-
-        Map<String, Object> responseMap = new LinkedHashMap<>();
-        responseMap.put("courses", courseDetails);
-
-        return ResponseEntity.ok().body(responseMap);
+    public List<Course> getAllCourses() {
+        return courseRepo.findAll();
     }
 
-    public AppCourse createAppCourse(AppCourse appCourse) {
-        return appCourseRepo.save(appCourse);
+
+    public Course updateCourse(Course courseRequest) {
+        Course existingCourse = courseRepo.findById(courseRequest.getCourseId()).orElse(null);
+        existingCourse.setCourseName(courseRequest.getCourseName());
+        existingCourse.setCourseDetails(courseRequest.getCourseDetails());
+        existingCourse.setCourseImage(courseRequest.getCourseImage());
+        existingCourse.setPrice(courseRequest.getPrice());
+        existingCourse.setApproved(courseRequest.isApproved());
+        existingCourse.setInstructorId(courseRequest.getInstructorId());
+        return courseRepo.save(existingCourse);
     }
 
-    public AppCourse getAppCourseById(String id) {
-        return appCourseRepo.findById(id).orElse(null);
+    public Course deleteCourse(String id) {
+        Course existingCourse = courseRepo.findById(id).orElse(null);
+        courseRepo.deleteById(id);
+        return existingCourse;
     }
 
-    public List<AppCourse> getAllAppCourses() {
-        return appCourseRepo.findAll();
-    }
-
-    public AppCourse updateAppCourse(AppCourse appCourseRequest) {
-        // Get the existing AppCourse from DB
-        AppCourse existingAppCourse = appCourseRepo.findById(appCourseRequest.getId()).orElse(null);
-
-        // Update the fields of the existing AppCourse
-        existingAppCourse.setCourseDetails(appCourseRequest.getCourseDetails());
-        existingAppCourse.setInstructorId(appCourseRequest.getInstructorId());
-
-        // Save the updated AppCourse back to the database
-        return appCourseRepo.save(existingAppCourse);
-    }
-
-    public AppCourse deleteAppCourse(String id) {
-        // Get the existing AppCourse from DB
-        AppCourse existingAppCourse = appCourseRepo.findById(id).orElse(null);
-
-        // Delete the AppCourse from the database
-        appCourseRepo.deleteById(id);
-
-        // Return the deleted AppCourse
-        return existingAppCourse;
+    public Course toggleApproval(String id) {
+        Course existingCourse = courseRepo.findById(id).orElse(null);
+        existingCourse.setApproved(!existingCourse.isApproved());
+        return courseRepo.save(existingCourse);
     }
 }
