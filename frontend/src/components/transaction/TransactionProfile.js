@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
-function LearnerProfile() {
+function TransactionProfile() {
   const [userDetails, setUserDetails] = useState(null);
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ function LearnerProfile() {
         {userDetails ? (
           <>
             <h3 className="text-2xl mb-5 text-center">
-              Welcome Learner {userDetails.firstName} To Microlearn
+              Welcome Administrator {userDetails.firstName} To Microlearn
             </h3>
             <div>
               <p>First Name: {userDetails.firstName}</p>
@@ -58,7 +58,7 @@ function LearnerProfile() {
             <button
               className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
               onClick={() => {
-                navigate("/learner/user");
+                navigate("/transaction/user");
               }}
             >
               Go to Demo page
@@ -79,4 +79,4 @@ function LearnerProfile() {
   );
 }
 
-export default LearnerProfile;
+export default TransactionProfile;

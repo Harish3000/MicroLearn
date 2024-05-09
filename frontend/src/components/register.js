@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import {
   doc,
   setDoc,
@@ -40,6 +40,18 @@ function Register() {
     fetchLastUserId();
   }, []);
 
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      // Redirect to login page after successful logout
+      window.location.href = "/login";
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+      });
+    }
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -54,10 +66,12 @@ function Register() {
           lastName: lname,
           role: role,
         });
+        toast.success("User Registered Successfully!!", {
+          position: "top-center",
+        });
+        // Logout and redirect to login page
+        logout();
       }
-      toast.success("User Registered Successfully!!", {
-        position: "top-center",
-      });
     } catch (error) {
       toast.error(error.message, {
         position: "bottom-center",

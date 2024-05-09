@@ -1,9 +1,11 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
+import { useNavigate } from "react-router-dom"; // Importing useNavigate
 
 function AdminProfile() {
   const [userDetails, setUserDetails] = useState(null);
+  const navigate = useNavigate(); // Using useNavigate hook to get the navigation function
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -30,7 +32,7 @@ function AdminProfile() {
   async function handleLogout() {
     try {
       await auth.signOut();
-      window.location.href = "/login";
+      navigate("/login"); // Using navigate for navigation
       console.log("User logged out successfully!");
     } catch (error) {
       console.error("Error logging out:", error.message);
@@ -56,7 +58,7 @@ function AdminProfile() {
             <button
               className="w-full px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
               onClick={() => {
-                window.location.href = "./admin/user";
+                navigate("/admin/user");
               }}
             >
               Go to Demo page
