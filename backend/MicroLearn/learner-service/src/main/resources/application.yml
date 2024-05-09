@@ -1,0 +1,17 @@
+server:
+  port: 9093
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:admin@microlearndb.9tj1xza.mongodb.net/?retryWrites=true&w=majority&appName=MicroLearnDB
+      database: MicroLearnDB
+  application:
+    name: learner-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+  instance:
+    hostname: learner-service

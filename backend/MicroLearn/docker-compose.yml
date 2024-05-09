@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  apigateway-service:
+    build: ./api-gateway-service
+    container_name: api-gateway
+    ports:
+      - "9094:9094"
+
+  eureka-service:
+    build: ./eureka-server-application
+    container_name: eureka
+    ports:
+      - "8761:8761"
+
+  learner-service:
+    build: ./learner-service
+    container_name: learner-service
+    ports:
+      - "9093:9093"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://admin:admin@microlearndb.9tj1xza.mongodb.net/?retryWrites=true&w=majority&appName=MicroLearnDB
+
+  instructor-service:
+    build: ./instructor-service
+    container_name: instructor-service
+    ports:
+      - "9092:9092"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://admin:admin@microlearndb.9tj1xza.mongodb.net/?retryWrites=true&w=majority&appName=MicroLearnDB
+
+  transaction-service:
+    build: ./transaction-service
+    container_name: transaction-service
+    ports:
+      - "9095:9095"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://admin:admin@microlearndb.9tj1xza.mongodb.net/?retryWrites=true&w=majority&appName=MicroLearnDB
+
+  admin-service:
+    build: ./admin-service
+    container_name: admin-service
+    ports:
+      - "9096:9096"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://admin:admin@microlearndb.9tj1xza.mongodb.net/?retryWrites=true&w=majority&appName=MicroLearnDB
+
+
+
+
+networks:
+  default:
+    external:
+      name: microlearn-network

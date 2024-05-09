@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: instructor-service
+          uri: lb://instructor-service
+          predicates:
+            - Path=/instructor/**
+        - id: learner-service
+          uri: lb://learner-service
+          predicates:
+            - Path=/learner/**
+        - id: transaction-service
+          uri: lb://transaction-service
+          predicates:
+            - Path=/transaction/**
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/**
+
+server:
+  port: 9094
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+  instance:
+    hostname: eureka
