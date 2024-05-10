@@ -44,9 +44,9 @@ const AdminHome = () => {
           icon="📘"
         />
         <Rectangle
-          title="Instructors"
-          text="Manage instructors"
-          link="/admin/AdminHome/instructors"
+          title="Users"
+          text="Manage Users"
+          link="/admin/users"
           icon="👨‍🏫"
         />
         <Rectangle

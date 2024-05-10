@@ -162,7 +162,7 @@ function Users() {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
-      <div className="w-3/4 p-10 bg-white rounded shadow-xl">
+      <div className="w-4/5 p-10 bg-white rounded shadow-xl">
         <Table
           columns={columns}
           dataSource={data}
