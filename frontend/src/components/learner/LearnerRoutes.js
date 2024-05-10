@@ -4,6 +4,7 @@ import User from "./user";
 import LearnerProfile from "./LearnerProfile";
 import LearnerHomePage from "./LearnerHomePage";
 import CoursePage from "./CoursePage";
+import MyCourses from "./MyCourses";
 
 function LearnerRoutes() {
   return (
@@ -12,6 +13,7 @@ function LearnerRoutes() {
       <Route path="/profile" element={<LearnerProfile />} />
       <Route path="course/:courseId" element={<CoursePage />} />
       <Route path="user" element={<User />} />
+      <Route path="/my-courses" element={<MyCourses/>}/>
     </Routes>
   );
 }
