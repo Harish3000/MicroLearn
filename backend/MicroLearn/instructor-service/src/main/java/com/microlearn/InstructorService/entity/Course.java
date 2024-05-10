@@ -12,11 +12,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Course {
 
     @Id
     private String courseId;
-    private String name;
+    private String courseName;
+    private String courseDetails;
+    private String courseImage;
+    private String price;
+    private Boolean Approved;
     private String instructorId;
+    private Content content;
 
 }
