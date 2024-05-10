@@ -28,7 +28,7 @@ const AdminHome = () => {
         <Rectangle
           title="Transactions"
           text="View user transactions"
-          link="/transaction/user"
+          link="/transaction/paymentdata" // Updated link here
           icon="💰"
         />
       </div>
