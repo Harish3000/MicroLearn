@@ -43,4 +43,14 @@ public class LearnerController {
         }
     }
 
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Void> deleteLearner(@PathVariable("id") String enrollmentId) {
+        boolean deleted = learnerService.deleteLearnerById(enrollmentId);
+        if (deleted) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

@@ -34,4 +34,13 @@ public class LearnerService {
         return learnerRepository.findById(enrollmentId).orElse(null);
     }
 
+    public boolean deleteLearnerById(String enrollmentId) {
+        if (learnerRepository.existsById(enrollmentId)) {
+            learnerRepository.deleteById(enrollmentId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
