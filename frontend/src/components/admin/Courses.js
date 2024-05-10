@@ -62,11 +62,15 @@ function Courses() {
       title: "Course Details",
       dataIndex: "courseDetails",
       key: "courseDetails",
+      ellipsis: true,
+      width: "auto",
     },
     {
       title: "Course Image",
       dataIndex: "courseImage",
       key: "courseImage",
+      ellipsis: true,
+      width: "auto",
     },
     {
       title: "Price",
@@ -112,7 +116,13 @@ function Courses() {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-3/4 p-10 bg-white rounded shadow-xl">
-        <Table columns={columns} dataSource={data} rowKey="courseId" />
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="courseId"
+          scroll={{ y: 500 }}
+          pagination={false}
+        />
       </div>
     </div>
   );
