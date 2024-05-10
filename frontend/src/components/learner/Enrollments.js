@@ -36,12 +36,12 @@ function Enrollments() {
         const response = await axios.delete(`/learner/delete/${learnerToDelete.enrollmentId}`);
         if (response.status === 200) {
           setLearners(learners.filter((learner) => learner.enrollmentId !== learnerToDelete.enrollmentId));
-          message.success('Learner deleted successfully.');
+          message.success('Unenrolled successfully.');
         } else {
-          message.error('Failed to delete learner.');
+          message.error('Failed to unenroll learner.');
         }
       } catch (err) {
-        message.error('Error deleting learner: ' + err.message);
+        message.error('Error unenrolling learner: ' + err.message);
       } finally {
         setDeleteModalVisible(false);
         setLearnerToDelete(null);
@@ -112,14 +112,14 @@ function Enrollments() {
 
       {/* Delete Confirmation Modal */}
       <Modal
-        title="Delete Confirmation"
+        title="Confirmation"
         visible={deleteModalVisible}
         onOk={handleDelete}
         onCancel={() => setDeleteModalVisible(false)}
-        okText="Delete"
+        okText="Unenroll"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete this learner?</p>
+        <p>Are you sure you want to unenroll this learner?</p>
       </Modal>
     </div>
   );
