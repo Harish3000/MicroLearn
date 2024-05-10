@@ -1,6 +1,5 @@
 package com.microlearn.AdminService.controller;
 
-
 import com.microlearn.AdminService.entity.Learner;
 import com.microlearn.AdminService.service.LearnerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +10,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/learner")
 public class LearnerController {
 
+    private final LearnerService learnerService;
 
-     @Autowired
-     private LearnerService learnerService;
-    @GetMapping("/{id}")
-   public Learner getLearnerById(@PathVariable String id){
-        return  learnerService.getLearnerById(id);
-
+    @Autowired
+    public LearnerController(LearnerService learnerService) {
+        this.learnerService = learnerService;
     }
 
-    @PostMapping("/insert")
-    public Learner insertLearner(@RequestBody Learner learner){
-        return  learnerService.insertLearner(learner);
-
+    @PostMapping("/create")
+    public ResponseEntity<Learner> createLearner(@RequestBody Learner learner) {
+        System.out.println("Received data: " + learner);
+        Learner createdLearner = learnerService.createLearner(learner);
+        return ResponseEntity.ok(createdLearner);
     }
 }
