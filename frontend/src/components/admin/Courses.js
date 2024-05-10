@@ -66,13 +66,6 @@ function Courses() {
       width: "auto",
     },
     {
-      title: "Course Image",
-      dataIndex: "courseImage",
-      key: "courseImage",
-      ellipsis: true,
-      width: "auto",
-    },
-    {
       title: "Price",
       dataIndex: "price",
       key: "price",

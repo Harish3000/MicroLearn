@@ -14,7 +14,7 @@ const AdminChart = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-lg font-semibold mb-4">User Activity Chart</h2>
+      <h2 className="text-lg font-semibold mb-4">User Activity </h2>
       <Chart
         width={"100%"}
         height={"300px"}
