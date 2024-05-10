@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, notification, Modal, Button, Form, Input } from "antd";
+import { Table, notification, Modal, Button, Form, Input, Select } from "antd";
 import { db } from "../firebase";
 import {
   collection,
@@ -19,6 +19,7 @@ function Users() {
   const [loading, setLoading] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState(null);
+  const [roleOptions, setRoleOptions] = useState(["Instructor", "Learner"]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -217,12 +218,16 @@ function Users() {
               />
             </Form.Item>
             <Form.Item label="Role">
-              <Input
+              <Select
                 value={formData.role}
-                onChange={(e) =>
-                  setFormData({ ...formData, role: e.target.value })
-                }
-              />
+                onChange={(value) => setFormData({ ...formData, role: value })}
+              >
+                {roleOptions.map((option) => (
+                  <Select.Option key={option} value={option}>
+                    {option}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Form>
         </Modal>
