@@ -52,56 +52,12 @@ const CoursePage = () => {
     fetchUserData();
   }, []);
 
-  // const handleEnrollment = async () => {
-  //   const learnerId = userDetails.userId; // Replace with the actual learner ID
-  //   const learnerName = userDetails.firstName;
-  //   const learnerEmail = userDetails.email;
-  //   const courseId = [course.courseId]; // Should be obtained from `course.courseId`
-  //   const paymentId = "PAY001"; //Hard coded
-  
-  //   const newEnrollment = {
-  //     learnerId,
-  //     courseId,
-  //     paymentId,
-  //   };
-
-  //   const newLearner = {
-  //     learnerId,
-  //     learnerName,
-  //     learnerEmail,
-  //     courseId
-  //   }
-
-  //   console.log(newEnrollment);
-  //   console.log(newLearner);
-  
-  //   try {
-  //     const response = await axios.post("http://localhost:9094/learner/create", newEnrollment);
-  //     if (response.status === 200) {
-  //       notification.success({
-  //         message: "Enrollment Successful",
-  //         description: "You have successfully enrolled in the course!",
-  //       });
-  //     } else {
-  //       notification.error({
-  //         message: "Enrollment Failed",
-  //         description: "An error occurred during enrollment.",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating enrollment:", error);
-  //     notification.error({
-  //       message: "Enrollment Failed",
-  //       description: "An error occurred during enrollment.",
-  //     });
-  //   }
-  // };
-
   const handleEnrollment = async () => {
     const learnerId = userDetails.userId; // Replace with the actual learner ID
     const learnerName = userDetails.firstName;
     const learnerEmail = userDetails.email;
-    const courseId = [course.courseId]; // Array of course IDs
+    const courseIdEnr = course.courseId;
+    const courseIdLearner = [course.courseId]; // Array of course IDs
     const paymentId = "PAY001"; // Hardcoded, update as needed
     
     // Creating newEnrollment and newLearner objects
@@ -117,13 +73,12 @@ const CoursePage = () => {
       learnerEmail,
       courseId,
     };
-  
+
     console.log(newEnrollment);
-    console.log(newLearner);
   
     try {
       // Send POST request to create enrollment
-      const enrollmentResponse = await axios.post("http://localhost:9094/enrollment/create", newEnrollment);
+      const enrollmentResponse = await axios.post("/learner/create", newEnrollment);
       
       // Check if enrollment was successful
       if (enrollmentResponse.status === 200) {
@@ -136,7 +91,7 @@ const CoursePage = () => {
       }
   
       // Now send POST request to create the learner
-      const learnerResponse = await axios.post("http://localhost:9094/learner/create-learner", newLearner);
+      const learnerResponse = await axios.post("/learner/create-learner", newLearner);
   
       if (learnerResponse.status === 200) {
         notification.success({

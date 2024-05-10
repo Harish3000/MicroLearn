@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Button, Spin, Alert } from 'antd';
+import { Table, Spin, Alert, Modal, message } from 'antd';
 import 'antd/dist/reset.css';
 
 function Enrollments() {
   const [learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [learnerToDelete, setLearnerToDelete] = useState(null);
 
   useEffect(() => {
     const fetchLearners = async () => {
       try {
-        const response = await axios.get('http://localhost:9094/learner/get-all');
+        const response = await axios.get('/learner/get-all');
         setLearners(response.data);
       } catch (err) {
         setError(err.message);
@@ -23,12 +25,28 @@ function Enrollments() {
     fetchLearners();
   }, []);
 
-  const handleUpdate = (record) => {
-    // Implement update functionality
+  const showDeleteModal = (record) => {
+    setLearnerToDelete(record);
+    setDeleteModalVisible(true);
   };
 
-  const handleDelete = (record) => {
-    // Implement delete functionality
+  const handleDelete = async () => {
+    if (learnerToDelete) {
+      try {
+        const response = await axios.delete(`/learner/delete/${learnerToDelete.enrollmentId}`);
+        if (response.status === 200) {
+          setLearners(learners.filter((learner) => learner.enrollmentId !== learnerToDelete.enrollmentId));
+          message.success('Learner deleted successfully.');
+        } else {
+          message.error('Failed to delete learner.');
+        }
+      } catch (err) {
+        message.error('Error deleting learner: ' + err.message);
+      } finally {
+        setDeleteModalVisible(false);
+        setLearnerToDelete(null);
+      }
+    }
   };
 
   const columns = [
@@ -36,51 +54,73 @@ function Enrollments() {
       title: 'Learner ID',
       dataIndex: 'learnerId',
       key: 'learnerId',
-      width: 150, // Reduced column width
+      width: 200,
     },
     {
       title: 'Course ID',
       dataIndex: 'courseId',
       key: 'courseId',
-      width: 150, // Reduced column width
+      width: 200,
     },
     {
       title: 'Payment ID',
       dataIndex: 'paymentId',
       key: 'paymentId',
-      width: 150, // Reduced column width
+      width: 200,
     },
     {
       title: 'Actions',
       key: 'actions',
-      width: 250, // Reduced column width but slightly wider for buttons
+      width: 250,
       render: (text, record) => (
         <div className="flex space-x-2 p-2">
-          <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={() => handleUpdate(record)}>Update</button>
-          <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => handleDelete(record)}>Delete</button>
+          <button className="bg-green-500 text-white px-4 py-2 rounded" style={{ marginRight: '10px' }}>
+            Update
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded"
+            onClick={() => showDeleteModal(record)}
+          >
+            Delete
+          </button>
         </div>
       ),
     },
   ];
 
   return (
-    <div className="p-6 flex justify-center items-center"> {/* Centered the entire table */}
-      <div>
-        <h2 className="text-2xl font-bold text-center mb-4">Course Enrollement</h2> {/* Bold, centered, and larger font */}
-        {loading ? (
-          <Spin tip="Loading..." />
-        ) : error ? (
-          <Alert message={error} type="error" className="p-4" /> 
-        ) : (
-          <Table
-            dataSource={learners}
-            columns={columns}
-            rowKey={(record) => record.enrollmentId}
-            pagination={{ pageSize: 10 }}
-            className="p-4" // Padding for the table
-          />
-        )}
+    <div className="shadow-lg bg-gray-200 p-6 rounded-lg">
+      <div className="p-6 flex justify-center items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-center mb-4">Course Enrollment</h2>
+          {loading ? (
+            <Spin tip="Loading..." />
+          ) : error ? (
+            <Alert message={error} type="error" />
+          ) : (
+            <Table
+              dataSource={learners}
+              columns={columns}
+              rowKey={(record) => record.enrollmentId}
+              className="text-lg"
+              scroll={{ y: 500 }}
+              pagination={false}
+            />
+          )}
+        </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title="Delete Confirmation"
+        visible={deleteModalVisible}
+        onOk={handleDelete}
+        onCancel={() => setDeleteModalVisible(false)}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this learner?</p>
+      </Modal>
     </div>
   );
 }
