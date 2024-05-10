@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnrollmentService {
@@ -37,6 +38,20 @@ public class EnrollmentService {
 
     public Enrollment getLearnerById(String enrollmentId) {
         return learnerRepository.findById(enrollmentId).orElse(null);
+    }
+
+    public Enrollment updateEnrollment(String enrollmentId, Enrollment updatedEnrollment) {
+        Optional<Enrollment> existingEnrollment = learnerRepository.findById(enrollmentId);
+        if (existingEnrollment.isPresent()) {
+            Enrollment enrollment = existingEnrollment.get();
+            enrollment.setLearnerId(updatedEnrollment.getLearnerId());
+            enrollment.setCourseId(updatedEnrollment.getCourseId());
+            enrollment.setPaymentId(updatedEnrollment.getPaymentId());
+            // Add any other fields that need updating
+            return learnerRepository.save(enrollment);
+        } else {
+            return null;
+        }
     }
 
     public boolean deleteLearnerById(String enrollmentId) {

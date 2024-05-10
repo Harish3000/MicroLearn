@@ -50,6 +50,19 @@ public class EnrollmentController {
         }
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Enrollment> updateEnrollment(
+            @PathVariable("id") String enrollmentId,
+            @RequestBody Enrollment updatedEnrollment
+    ) {
+        Enrollment updated = learnerService.updateEnrollment(enrollmentId, updatedEnrollment);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteLearner(@PathVariable("id") String enrollmentId) {
         boolean deleted = learnerService.deleteLearnerById(enrollmentId);
