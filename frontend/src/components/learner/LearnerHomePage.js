@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { auth } from "../firebase"; // assuming auth and db are imported from "../firebase"
+import { auth } from "../firebase";
 import { Button } from "antd";
 
 const LearnerHomePage = () => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Spin, Alert, Modal, message } from 'antd';
+import { Table, Spin, Alert, Modal, Form, Input, message } from 'antd';
 import 'antd/dist/reset.css';
 
 function Enrollments() {
@@ -9,6 +9,9 @@ function Enrollments() {
   const [error, setError] = useState(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [learnerToDelete, setLearnerToDelete] = useState(null);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [learnerToUpdate, setLearnerToUpdate] = useState(null);
+  const [form] = Form.useForm(); // Form instance
 
   useEffect(() => {
     const fetchLearners = async () => {
@@ -49,6 +52,38 @@ function Enrollments() {
     }
   };
 
+  const showUpdateModal = (record) => {
+    setLearnerToUpdate(record);
+    form.setFieldsValue({
+      learnerId: record.learnerId,
+      courseId: record.courseId,
+      paymentId: record.paymentId,
+    });
+    setUpdateModalVisible(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const values = await form.validateFields(); // Validate form fields
+      const response = await axios.put(`/learner/update/${learnerToUpdate.enrollmentId}`, values);
+      if (response.status === 200) {
+        setLearners((prev) =>
+          prev.map((learner) =>
+            learner.enrollmentId === learnerToUpdate.enrollmentId ? response.data : learner
+          )
+        );
+        message.success('Enrollment updated successfully.');
+      } else {
+        message.error('Failed to update enrollment.');
+      }
+    } catch (err) {
+      message.error('Error updating enrollment: ' + err.message);
+    } finally {
+      setUpdateModalVisible(false);
+      setLearnerToUpdate(null);
+    }
+  };
+
   const columns = [
     {
       title: 'Learner ID',
@@ -74,14 +109,14 @@ function Enrollments() {
       width: 250,
       render: (text, record) => (
         <div className="flex space-x-2 p-2">
-          <button className="bg-green-500 text-white px-4 py-2 rounded" style={{ marginRight: '10px' }}>
+          <button className="bg-green-500 text-white px-4 py-2 rounded" style={{ marginLeft: '60px', marginRight: "80px" }}>
             Update
           </button>
           <button
             className="bg-red-500 text-white px-4 py-2 rounded"
             onClick={() => showDeleteModal(record)}
           >
-            Delete
+            Unenroll
           </button>
         </div>
       ),
@@ -110,7 +145,7 @@ function Enrollments() {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+{/* Delete Modal */}
       <Modal
         title="Confirmation"
         visible={deleteModalVisible}
@@ -120,6 +155,40 @@ function Enrollments() {
         cancelText="Cancel"
       >
         <p>Are you sure you want to unenroll this learner?</p>
+      </Modal>
+
+      {/* Update Modal */}
+      <Modal
+        title="Update Enrollment"
+        visible={updateModalVisible}
+        onOk={handleUpdate}
+        onCancel={() => setUpdateModalVisible(false)}
+        okText="Update"
+        cancelText="Cancel"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="Learner ID"
+            name="learnerId"
+            rules={[{ required: true, message: 'Please enter Learner ID' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Course ID"
+            name="courseId"
+            rules={[{ required: true, message: 'Please enter Course ID' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Payment ID"
+            name="paymentId"
+            rules={[{ required: true, message: 'Please enter Payment ID' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

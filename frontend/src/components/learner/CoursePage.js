@@ -23,7 +23,7 @@ const CoursePage = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching course details:", error);
-        setLoading(false); // Make sure to set loading to false on error
+        setLoading(false);
       }
     };
 
@@ -53,14 +53,13 @@ const CoursePage = () => {
   }, []);
 
   const handleEnrollment = async () => {
-    const learnerId = userDetails.userId; // Replace with the actual learner ID
+    const learnerId = userDetails.userId;
     const learnerName = userDetails.firstName;
     const learnerEmail = userDetails.email;
     const courseIdEnr = course.courseId;
-    const courseIdLearner = [course.courseId]; // Array of course IDs
-    const paymentId = "PAY001"; // Hardcoded, update as needed
+    const courseIdLearner = [course.courseId];
+    const paymentId = "PAY001"; // Hardcoded
     
-    // Creating newEnrollment and newLearner objects
     const newEnrollment = {
       learnerId,
       courseId,
@@ -77,10 +76,8 @@ const CoursePage = () => {
     console.log(newEnrollment);
   
     try {
-      // Send POST request to create enrollment
       const enrollmentResponse = await axios.post("/learner/create", newEnrollment);
       
-      // Check if enrollment was successful
       if (enrollmentResponse.status === 200) {
         notification.success({
           message: "Enrollment Successful",
@@ -90,7 +87,6 @@ const CoursePage = () => {
         throw new Error("Enrollment failed with status: " + enrollmentResponse.status);
       }
   
-      // Now send POST request to create the learner
       const learnerResponse = await axios.post("/learner/create-learner", newLearner);
   
       if (learnerResponse.status === 200) {
@@ -105,7 +101,6 @@ const CoursePage = () => {
     } catch (error) {
       console.error("Error during the process:", error);
   
-      // Notify the user of an error
       notification.error({
         message: "Operation Failed",
         description: "An error occurred during the process. Please try again later.",
@@ -131,7 +126,6 @@ const CoursePage = () => {
         </div>
       ) : (
         <div>
-          {/* Check if course data is available before trying to display it */}
           {course ? (
             <div
               className="flex flex-row"
@@ -184,7 +178,7 @@ const CoursePage = () => {
                 }}>
                   {course.courseDetails.split(".").map(
                     (detail, index) =>
-                      detail.trim() && ( // Only create bullet points for non-empty sentences
+                      detail.trim() && (
                         <li style={{
                           paddingTop:"20px"
                         }}key={index}>• &nbsp;{detail.trim()}.</li>
@@ -212,7 +206,6 @@ const CoursePage = () => {
               </div>
             </div>
           ) : (
-            // display the error popup here
             <p>Course not found.</p>
           )}
         </div>
