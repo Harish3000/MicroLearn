@@ -30,4 +30,8 @@ public class LearnerService {
         return learnerRepository.findAll();
     }
 
+    public Learner getLearnerById(String enrollmentId) {
+        return learnerRepository.findById(enrollmentId).orElse(null);
+    }
+
 }

@@ -33,4 +33,14 @@ public class LearnerController {
         return ResponseEntity.ok(learners);
     }
 
+    @GetMapping("/get-one/{id}")
+    public ResponseEntity<Learner> getLearnerById(@PathVariable("id") String enrollmentId) {
+        Learner learner = learnerService.getLearnerById(enrollmentId);
+        if (learner != null) {
+            return ResponseEntity.ok(learner);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }
