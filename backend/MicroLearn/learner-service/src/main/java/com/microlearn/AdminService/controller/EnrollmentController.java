@@ -1,6 +1,7 @@
 package com.microlearn.AdminService.controller;
 
 import com.microlearn.AdminService.entity.Enrollment;
+import com.microlearn.AdminService.entity.Learner;
 import com.microlearn.AdminService.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class EnrollmentController {
         System.out.println("Received data: " + learner);
         Enrollment createdLearner = learnerService.createLearner(learner);
         return ResponseEntity.ok(createdLearner);
+    }
+
+    @PostMapping("/create-learner")
+    public ResponseEntity<Learner> addLearner(@RequestBody Learner learner) {
+        Learner newLearner = learnerService.addLerner(learner);
+        return ResponseEntity.ok(newLearner);
     }
 
     @GetMapping("/get-all")
