@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Courses from "./Courses";
 import AdminProfile from "./AdminProfile";
 import AdminHome from "./AdminHome";
+import Enrollments from "../learner/Enrollments";
 
 function AdminRoutes() {
   return (
@@ -10,6 +11,7 @@ function AdminRoutes() {
       <Route path="/" element={<AdminHome />} />
       <Route path="/profile" element={<AdminProfile />} />
       <Route path="/courses" element={<Courses />} />
+      <Route path="/enrollment" element={<Enrollments />} />
     </Routes>
   );
 }

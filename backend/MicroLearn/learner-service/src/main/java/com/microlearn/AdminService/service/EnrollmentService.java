@@ -1,36 +1,32 @@
 package com.microlearn.AdminService.service;
 
-import com.microlearn.AdminService.entity.Learner;
-import com.microlearn.AdminService.repo.LearnerRepo;
+import com.microlearn.AdminService.entity.Enrollment;
+import com.microlearn.AdminService.repo.EnrollmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 @Service
-public class LearnerService {
+public class EnrollmentService {
 
-    private final LearnerRepo learnerRepository;
+    private final EnrollmentRepo learnerRepository;
 
     @Autowired
-    public LearnerService(LearnerRepo learnerRepository) {
+    public EnrollmentService(EnrollmentRepo learnerRepository) {
         this.learnerRepository = learnerRepository;
     }
 
-    public Learner createLearner(Learner learner) {
+    public Enrollment createLearner(Enrollment learner) {
         System.out.println("Saving data: " + learner);
         return learnerRepository.save(learner);
     }
 
-    public List<Learner> getAllLearners() {
+    public List<Enrollment> getAllLearners() {
         return learnerRepository.findAll();
     }
 
-    public Learner getLearnerById(String enrollmentId) {
+    public Enrollment getLearnerById(String enrollmentId) {
         return learnerRepository.findById(enrollmentId).orElse(null);
     }
 

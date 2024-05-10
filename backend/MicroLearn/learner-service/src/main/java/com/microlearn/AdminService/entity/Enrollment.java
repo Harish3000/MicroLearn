@@ -5,13 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "Enrollment")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Learner {
+public class Enrollment {
 
     @Id
     private String enrollmentId;

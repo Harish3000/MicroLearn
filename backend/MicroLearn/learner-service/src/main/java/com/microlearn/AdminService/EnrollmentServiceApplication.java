@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class LearnerServiceApplication {
+public class EnrollmentServiceApplication {
 
 	@Bean
 	@Primary
@@ -16,7 +16,7 @@ public class LearnerServiceApplication {
 		return new RestTemplate();
 	}
 	public static void main(String[] args) {
-		SpringApplication.run(LearnerServiceApplication.class, args);
+		SpringApplication.run(EnrollmentServiceApplication.class, args);
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.microlearn.AdminService.controller;
 
-import com.microlearn.AdminService.entity.Learner;
-import com.microlearn.AdminService.service.LearnerService;
+import com.microlearn.AdminService.entity.Enrollment;
+import com.microlearn.AdminService.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,31 +12,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/learner")
 @CrossOrigin(origins = "http://localhost:3000")
-public class LearnerController {
+public class EnrollmentController {
 
-    private final LearnerService learnerService;
+    private final EnrollmentService learnerService;
 
     @Autowired
-    public LearnerController(LearnerService learnerService) {
+    public EnrollmentController(EnrollmentService learnerService) {
         this.learnerService = learnerService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Learner> createLearner(@RequestBody Learner learner) {
+    public ResponseEntity<Enrollment> createLearner(@RequestBody Enrollment learner) {
         System.out.println("Received data: " + learner);
-        Learner createdLearner = learnerService.createLearner(learner);
+        Enrollment createdLearner = learnerService.createLearner(learner);
         return ResponseEntity.ok(createdLearner);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Learner>> getAllLearners() {
-        List<Learner> learners = learnerService.getAllLearners();
+    public ResponseEntity<List<Enrollment>> getAllLearners() {
+        List<Enrollment> learners = learnerService.getAllLearners();
         return ResponseEntity.ok(learners);
     }
 
     @GetMapping("/get-one/{id}")
-    public ResponseEntity<Learner> getLearnerById(@PathVariable("id") String enrollmentId) {
-        Learner learner = learnerService.getLearnerById(enrollmentId);
+    public ResponseEntity<Enrollment> getLearnerById(@PathVariable("id") String enrollmentId) {
+        Enrollment learner = learnerService.getLearnerById(enrollmentId);
         if (learner != null) {
             return ResponseEntity.ok(learner);
         } else {
