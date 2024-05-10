@@ -25,9 +25,4 @@ public class LearnerController {
         return  learnerService.insertLearner(learner);
 
     }
-
-    @GetMapping("/courses")
-    public ResponseEntity<Object> getAllCourses() {
-        return learnerService.getAllCourses();
-    }
 }

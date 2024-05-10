@@ -34,21 +34,4 @@ public class LearnerService
 
     }
 
-
-    public ResponseEntity<Object> getAllCourses() {
-        ResponseEntity<List> response = restTemplate.getForEntity("http://instructor-service:9092/instructor/courses", List.class);
-        List<Object> courses = response.getBody();
-
-        List<Object> courseDetails = new ArrayList<>();
-        for(Object course : courses){
-            Map<String, Object> courseMap = (Map<String, Object>) course;
-            courseDetails.add(courseMap);
-        }
-
-        Map<String, Object> responseMap = new LinkedHashMap<>();
-        responseMap.put("courses", courseDetails);
-
-        return ResponseEntity.ok().body(responseMap);
-    }
-
 }

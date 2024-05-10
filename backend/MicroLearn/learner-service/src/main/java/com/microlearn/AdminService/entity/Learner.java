@@ -6,14 +6,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Learner")
+@Document(collection = "Enrollment")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Learner {
 
     @Id
+    private String enrollmentId;
     private String learnerId;
-    private String name;
+    private String courseId;
+    private String paymentId;
 
 }
