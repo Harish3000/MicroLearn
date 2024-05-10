@@ -99,4 +99,16 @@ public class InstructorService
     }
 
 
+    public Course getCourseById(String courseId) {
+        Optional<Course> courseOptional = courseRepo.findById(courseId);
+
+        if (courseOptional.isPresent()) {
+            return courseOptional.get();
+        } else {
+            throw new IllegalArgumentException("Course with ID " + courseId + " not found");
+        }
+    }
+
+
+
 }

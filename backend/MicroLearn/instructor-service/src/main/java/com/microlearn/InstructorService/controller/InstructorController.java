@@ -48,4 +48,11 @@ public class InstructorController {
         Course updatedCourse = instructorService.updateCourse(course);
         return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
     }
+
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<Course> getCourseById(@PathVariable String courseId) {
+        Course course = instructorService.getCourseById(courseId);
+        return new ResponseEntity<>(course, HttpStatus.OK);
+    }
+
 }
