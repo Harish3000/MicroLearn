@@ -1,11 +1,13 @@
 package com.microlearn.AdminService.controller;
 
-
+import com.microlearn.AdminService.entity.Payment;
 import com.microlearn.AdminService.entity.Transaction;
 import com.microlearn.AdminService.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
@@ -14,20 +16,37 @@ public class TransactionController {
 
      @Autowired
      private TransactionService transactionService;
-    @GetMapping("/{id}")
-   public Transaction getTransactionById(@PathVariable String id){
-        return  transactionService.getTransactionById(id);
 
+
+//    @GetMapping("/courses")
+//    public ResponseEntity<Object> getAllCourses() {
+//        return transactionService.getAllCourses();
+//    }
+
+    @PostMapping("/payment")
+    public Payment createPayment(@RequestBody Payment payment) {
+        return transactionService.createPayment(payment);
     }
 
-    @PostMapping("/insert")
-    public Transaction insertTransaction(@RequestBody Transaction transaction){
-        return  transactionService.insertTransaction(transaction);
-
+    @GetMapping("/payment/{id}")
+    public Payment getPaymentById(@PathVariable String id) {
+        return transactionService.getPaymentById(id);
     }
 
-    @GetMapping("/courses")
-    public ResponseEntity<Object> getAllCourses() {
-        return transactionService.getAllCourses();
+    @GetMapping("/payments")
+    public List<Payment> getAllPayments() {
+        return transactionService.getAllPayments();
     }
+
+    @PutMapping("/payment")
+    public Payment updatePayment(@RequestBody Payment payment) {
+        return transactionService.updatePayment(payment);
+    }
+
+    @DeleteMapping("/payment/{id}")
+    public Payment deletePayment(@PathVariable String id) {
+        return transactionService.deletePayment(id);
+    }
+
+
 }
