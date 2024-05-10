@@ -1,7 +1,7 @@
 package com.microlearn.AdminService.controller;
 
 import com.microlearn.AdminService.entity.Admin;
-import com.microlearn.AdminService.entity.AppCourse;
+import com.microlearn.AdminService.entity.Course;
 import com.microlearn.AdminService.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,43 +16,41 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @GetMapping("/{id}")
-    public Admin getAdminById(@PathVariable String id){
-        return adminService.getAdminById(id);
+//    @GetMapping("/courses")
+//    public ResponseEntity<Object> getAllCourses() {
+//        return adminService.getAllCourses();
+//    }
+//
+
+//new ones---------------------------------------------------------
+
+    @PostMapping("/course")
+    public Course createCourse(@RequestBody Course course) {
+        return adminService.createCourse(course);
     }
 
-    @PostMapping("/insert")
-    public Admin insertAdmin(@RequestBody Admin admin){
-        return adminService.insertAdmin(admin);
+    @GetMapping("/course/{id}")
+    public Course getCourseById(@PathVariable String id) {
+        return adminService.getCourseById(id);
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<Object> getAllCourses() {
+    public List<Course> getAllCourses() {
         return adminService.getAllCourses();
     }
 
-    @PostMapping("/appCourse")
-    public AppCourse createAppCourse(@RequestBody AppCourse appCourse) {
-        return adminService.createAppCourse(appCourse);
+    @PutMapping("/course")
+    public Course updateCourse(@RequestBody Course course) {
+        return adminService.updateCourse(course);
     }
 
-    @GetMapping("/appCourse/{id}")
-    public AppCourse getAppCourseById(@PathVariable String id) {
-        return adminService.getAppCourseById(id);
+    @DeleteMapping("/course/{id}")
+    public Course deleteCourse(@PathVariable String id) {
+        return adminService.deleteCourse(id);
     }
 
-    @GetMapping("/appCourses")
-    public List<AppCourse> getAllAppCourses() {
-        return adminService.getAllAppCourses();
-    }
-
-    @PutMapping("/appCourse")
-    public AppCourse updateAppCourse(@RequestBody AppCourse appCourse) {
-        return adminService.updateAppCourse(appCourse);
-    }
-
-    @DeleteMapping("/appCourse/{id}")
-    public AppCourse deleteAppCourse(@PathVariable String id) {
-        return adminService.deleteAppCourse(id);
+    @PutMapping("/course/toggleApproval/{id}")
+    public Course toggleApproval(@PathVariable String id) {
+        return adminService.toggleApproval(id);
     }
 }

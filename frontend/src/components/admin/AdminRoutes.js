@@ -1,13 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import User from "./user";
+import Courses from "./Courses";
 import AdminProfile from "./AdminProfile";
+import AdminHome from "./AdminHome";
 
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<AdminProfile />} />
-      <Route path="/user" element={<User />} />
+      <Route path="/" element={<AdminHome />} />
+      <Route path="/profile" element={<AdminProfile />} />
+      <Route path="/courses" element={<Courses />} />
     </Routes>
   );
 }
