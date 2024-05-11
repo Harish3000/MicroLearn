@@ -4,6 +4,7 @@ import { Table, Button, notification, Modal } from "antd";
 function PaymentData() {
   const [data, setData] = useState([]);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedPaymentID, setSelectedPaymentID] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [loading, setLoading] = useState(false); // Added loading state
@@ -68,9 +69,36 @@ function PaymentData() {
   };
 
   const handleDecline = (paymentID) => {
-    notification.error({
-      message: `Payment ID ${paymentID} declined!`,
-    });
+    setSelectedPaymentID(paymentID);
+    setDeleteModalVisible(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `/transaction/payment/${selectedPaymentID}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        notification.success({
+          message: `Payment ID ${selectedPaymentID} deleted successfully!`,
+        });
+        // Update data after deletion
+        setData(data.filter((item) => item.paymentID !== selectedPaymentID));
+      } else {
+        throw new Error("Failed to delete payment");
+      }
+    } catch (error) {
+      console.error("Error deleting payment:", error);
+      notification.error({
+        message: "Failed to delete payment",
+      });
+    } finally {
+      setDeleteModalVisible(false);
+    }
   };
 
   const columns = [
@@ -174,6 +202,27 @@ function PaymentData() {
         ]}
       >
         Are you sure you want to send confirmation email?
+      </Modal>
+      <Modal
+        title="Delete Payment"
+        visible={deleteModalVisible}
+        onCancel={() => setDeleteModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setDeleteModalVisible(false)}>
+            Cancel
+          </Button>,
+          <Button
+            key="delete"
+            type="primary"
+            danger
+            loading={loading}
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>,
+        ]}
+      >
+        Are you sure you want to delete this payment?
       </Modal>
     </div>
   );
