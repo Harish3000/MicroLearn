@@ -102,9 +102,7 @@ const User = () => {
   const handleDelete = () => {
     fetch(`/instructor/course/${selectedCourse.courseId}`, {
       method: "DELETE",
-      headers: {
-        // Add any headers if required
-      },
+      headers: {},
     })
       .then((response) => {
         if (!response.ok) {
@@ -125,7 +123,6 @@ const User = () => {
 
   const handleAdd = () => {
     form.validateFields().then((values) => {
-      // Set approved to false before sending to the backend
       const dataToSend = { ...values, approved: false };
 
       fetch("/instructor/course/create", {
@@ -188,7 +185,6 @@ const User = () => {
         </div>
       )}
 
-      {/* Other content */}
       <div className="w-full h-full p-12 bg-white rounded shadow-xl relative">
         <Button
           type="primary"

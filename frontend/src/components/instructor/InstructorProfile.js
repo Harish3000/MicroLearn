@@ -8,8 +8,10 @@ import {
 import { Button, Layout, Menu, Modal, Typography } from "antd";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { Chart } from "react-google-charts";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
+
 const { Header, Footer, Content, Sider } = Layout;
 const { Title } = Typography;
 
@@ -61,7 +63,7 @@ function InstructorProfile() {
         }}
       >
         <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item key="1" icon={<UserOutlined />}>
             Profile
           </Menu.Item>
@@ -92,13 +94,44 @@ function InstructorProfile() {
         <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
           <div
             className="site-layout-background"
-            style={{ padding: 24, textAlign: "center", background: "#fff" }}
+            style={{ padding: 24, background: "#fff" }}
           >
+            <Chart
+              width={"100%"}
+              height={"300px"}
+              chartType="AreaChart"
+              loader={<div>Loading Chart</div>}
+              data={[
+                ["Year", "Sales"],
+                [2018, 15],
+                [2019, 6],
+                [2020, 10],
+                [2021, 8],
+                [2022, 20],
+                [2024, 21],
+              ]}
+              options={{
+                title: "Course Sales Over Time",
+                curveType: "function",
+                hAxis: {
+                  title: "Year",
+                  ticks: [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+                },
+                vAxis: {
+                  title: "Sales",
+                  gridlines: { color: "transparent" },
+                },
+                colors: ["#875F9A"],
+              }}
+              rootProps={{ "data-testid": "1" }}
+            />
+
+            <br></br>
             {userDetails ? (
               <>
                 <div className="flex flex-col items-center mb-6">
                   <img
-                    src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
+                    src="https://static.vecteezy.com/system/resources/thumbnails/004/607/791/small/man-face-emotive-icon-smiling-male-character-in-blue-shirt-flat-illustration-isolated-on-white-happy-human-psychological-portrait-positive-emotions-user-avatar-for-app-web-design-vector.jpg"
                     alt="Profile"
                     className="w-24 h-24 rounded-full mb-4"
                   />
@@ -125,7 +158,7 @@ function InstructorProfile() {
                       className="w-1/2 font-bold mr-2"
                       onClick={() => navigate("/instructor/user")}
                     >
-                      Courses
+                      Panel
                     </Button>
                     <Button
                       type="primary"
@@ -194,7 +227,7 @@ function InstructorProfile() {
                   mind.
                 </li>
                 <li>
-                  Use a variety of resources such as slides, videos, and
+                  Use a variety of resources such as slides videos and
                   interactive quizzes to cater to different learning styles.
                 </li>
                 <li>

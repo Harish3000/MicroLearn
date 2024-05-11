@@ -31,7 +31,7 @@ const Course = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Fetched course data:", data); // Add this line for logging
+        console.log("Fetched course data:", data);
         setCourse(data);
         setLoading(false);
       })
@@ -42,19 +42,15 @@ const Course = () => {
   }, [courseId]);
 
   const handleEnrollButtonClick = () => {
-    // Open enrollment modal
     setEnrollmentModalVisible(true);
   };
 
   const handleEnrollmentModalOk = () => {
-    // Perform enrollment action (Fake action)
     console.log("Enrollment action performed.");
-    // Close enrollment modal
     setEnrollmentModalVisible(false);
   };
 
   const handleEnrollmentModalCancel = () => {
-    // Close enrollment modal
     setEnrollmentModalVisible(false);
   };
 
@@ -74,6 +70,12 @@ const Course = () => {
     return <p>Course not found</p>;
   }
 
+  const getVideoIdFromUrl = (url) => {
+    const match = url.match(/[?&]v=([^&]+)/);
+    return match && match[1];
+  };
+
+  const videoId = getVideoIdFromUrl(course.content.contentUrl);
   return (
     <Layout className="layout">
       <Header className="bg-gray-900 text-white">
@@ -86,15 +88,12 @@ const Course = () => {
             <Menu.Item key="2" icon={<AppstoreOutlined />}>
               <Link to="/courses">Courses</Link>
             </Menu.Item>
-            {/* Add more menu items as needed */}
           </Menu>
         </div>
       </Header>
       <Content className="bg-gray-100" style={{ padding: "0 20px" }}>
         <Layout style={{ padding: "24px 0", background: "#fff" }}>
-          <Sider width={200} style={{ background: "#fff" }}>
-            {/* Left Sidebar Content */}
-          </Sider>
+          <Sider width={200} style={{ background: "#fff" }}></Sider>
           <Content style={{ padding: "0 24px", minHeight: 280 }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
               <Breadcrumb.Item>
@@ -106,7 +105,7 @@ const Course = () => {
               <Card
                 hoverable
                 cover={<img alt="course" src={course.courseImage} />}
-                style={{ width: 800 }} // Adjust the width of the card as needed
+                style={{ width: 800 }}
               >
                 <Meta
                   title={<b>{course.courseName}</b>}
@@ -134,14 +133,17 @@ const Course = () => {
                         Additional Content:
                       </p>
                       <p>{course.content.contentDescription}</p>
-                      <a
-                        href={course.content.contentUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blues-500"
-                      >
-                        Download Content
-                      </a>
+                      <div className="mt-4">
+                        <iframe
+                          title="Course Video"
+                          width="560"
+                          height="315"
+                          src={`https://www.youtube.com/embed/${videoId}`}
+                          frameborder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowfullscreen
+                        ></iframe>
+                      </div>
                     </div>
                   )}
                 </div>
