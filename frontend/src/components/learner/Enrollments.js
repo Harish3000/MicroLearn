@@ -16,7 +16,7 @@ function Enrollments() {
   useEffect(() => {
     const fetchLearners = async () => {
       try {
-        const response = await axios.get('/learner/get-all');
+        const response = await axios.get('/learner/get-all-enrolled');
         setLearners(response.data);
       } catch (err) {
         setError(err.message);
@@ -36,7 +36,7 @@ function Enrollments() {
   const handleDelete = async () => {
     if (learnerToDelete) {
       try {
-        const response = await axios.delete(`/learner/delete/${learnerToDelete.enrollmentId}`);
+        const response = await axios.delete(`/learner/un-enroll/${learnerToDelete.enrollmentId}`);
         if (response.status === 200) {
           setLearners(learners.filter((learner) => learner.enrollmentId !== learnerToDelete.enrollmentId));
           message.success('Unenrolled successfully.');
@@ -65,7 +65,7 @@ function Enrollments() {
   const handleUpdate = async () => {
     try {
       const values = await form.validateFields(); // Validate form fields
-      const response = await axios.put(`/learner/update/${learnerToUpdate.enrollmentId}`, values);
+      const response = await axios.put(`/learner/update-enrolled/${learnerToUpdate.enrollmentId}`, values);
       if (response.status === 200) {
         setLearners((prev) =>
           prev.map((learner) =>
@@ -124,7 +124,7 @@ function Enrollments() {
   ];
 
   return (
-    <div className="shadow-lg bg-gray-200 p-6 rounded-lg">
+    <div>
       <div className="p-6 flex justify-center items-center">
         <div>
           <h2 className="text-2xl font-bold text-center mb-4">Course Enrollment</h2>

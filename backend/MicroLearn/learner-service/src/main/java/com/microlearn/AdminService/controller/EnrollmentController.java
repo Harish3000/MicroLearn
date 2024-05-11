@@ -9,40 +9,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/learner")
 public class EnrollmentController {
 
-    private final EnrollmentService learnerService;
+    private final EnrollmentService enrollmentService;
 
     @Autowired
     public EnrollmentController(EnrollmentService learnerService) {
-        this.learnerService = learnerService;
+        this.enrollmentService = learnerService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Enrollment> createLearner(@RequestBody Enrollment learner) {
+//    Enrollment Controllers
+    @PostMapping("/enroll")
+    public ResponseEntity<Enrollment> enroll(@RequestBody Enrollment learner) {
         System.out.println("Received data: " + learner);
-        Enrollment createdLearner = learnerService.createLearner(learner);
+        Enrollment createdLearner = enrollmentService.enroll(learner);
         return ResponseEntity.ok(createdLearner);
     }
 
-    @PostMapping("/create-learner")
-    public ResponseEntity<Learner> addLearner(@RequestBody Learner learner) {
-        Learner newLearner = learnerService.addLerner(learner);
-        return ResponseEntity.ok(newLearner);
-    }
-
-    @GetMapping("/get-all")
-    public ResponseEntity<List<Enrollment>> getAllLearners() {
-        List<Enrollment> learners = learnerService.getAllLearners();
+    @GetMapping("/get-all-enrolled")
+    public ResponseEntity<List<Enrollment>> getAllEnrolled() {
+        List<Enrollment> learners = enrollmentService.getAllEnrolled();
         return ResponseEntity.ok(learners);
     }
 
-    @GetMapping("/get-one/{id}")
-    public ResponseEntity<Enrollment> getLearnerById(@PathVariable("id") String enrollmentId) {
-        Enrollment learner = learnerService.getLearnerById(enrollmentId);
+    @GetMapping("/get-one-enrolled/{id}")
+    public ResponseEntity<Enrollment> getEnrollById(@PathVariable("id") String enrollmentId) {
+        Enrollment learner = enrollmentService.getEnrollById(enrollmentId);
         if (learner != null) {
             return ResponseEntity.ok(learner);
         } else {
@@ -50,12 +46,12 @@ public class EnrollmentController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update-enrolled/{id}")
     public ResponseEntity<Enrollment> updateEnrollment(
             @PathVariable("id") String enrollmentId,
             @RequestBody Enrollment updatedEnrollment
     ) {
-        Enrollment updated = learnerService.updateEnrollment(enrollmentId, updatedEnrollment);
+        Enrollment updated = enrollmentService.updateEnrollment(enrollmentId, updatedEnrollment);
         if (updated != null) {
             return ResponseEntity.ok(updated);
         } else {
@@ -63,14 +59,25 @@ public class EnrollmentController {
         }
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<Void> deleteLearner(@PathVariable("id") String enrollmentId) {
-        boolean deleted = learnerService.deleteLearnerById(enrollmentId);
+    @DeleteMapping("un-enroll/{id}")
+    public ResponseEntity<Void> unEnroll(@PathVariable("id") String enrollmentId) {
+        boolean deleted = enrollmentService.unEnroll(enrollmentId);
         if (deleted) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+//    Learner Controllers
+    @PostMapping("/create-learner")
+    public ResponseEntity<Learner> addLearner(@RequestBody Learner learner) {
+        Learner newLearner = enrollmentService.addLerner(learner);
+        return ResponseEntity.ok(newLearner);
+    }
+
+
+
+
 
 }

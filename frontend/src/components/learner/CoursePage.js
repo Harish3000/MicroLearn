@@ -13,7 +13,7 @@ const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
-  const [instructor, setInstructor] = useState(null);
+  const [courseIdLearner, setCourseIdLearner] = useState([]);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -53,57 +53,81 @@ const CoursePage = () => {
   }, []);
 
   const handleEnrollment = async () => {
+    if (!userDetails) {
+      console.error("User details not available");
+      return;
+    }
+
     const learnerId = userDetails.userId;
     const learnerName = userDetails.firstName;
-    const learnerEmail = userDetails.email;
-    const courseIdEnr = course.courseId;
-    const courseIdLearner = [course.courseId];
+    const email = userDetails.email;
+    const courseId = course.courseId;
     const paymentId = "PAY001"; // Hardcoded
-    
+
     const newEnrollment = {
       learnerId,
       courseId,
       paymentId,
     };
-  
-    const newLearner = {
-      learnerId,
-      learnerName,
-      learnerEmail,
-      courseId,
-    };
+    if (!courseIdLearner.includes(courseId)) {
+      const updatedCourseIdLearner = [...courseIdLearner, courseId];
+      setCourseIdLearner(updatedCourseIdLearner);
 
-    console.log(newEnrollment);
-  
-    try {
-      const enrollmentResponse = await axios.post("/learner/create", newEnrollment);
-      
-      if (enrollmentResponse.status === 200) {
-        notification.success({
-          message: "Enrollment Successful",
-          description: "You have successfully enrolled in the course!",
+      const newLearner = {
+        learnerId,
+        learnerName,
+        email,
+        courseIdList: updatedCourseIdLearner,
+      };
+
+      console.log(newLearner);
+
+      try {
+        const enrollmentResponse = await axios.post(
+          "/learner/enroll",
+          newEnrollment
+        );
+
+        if (enrollmentResponse.status === 200) {
+          notification.success({
+            message: "Enrollment Successful",
+            description: "You have successfully enrolled in the course!",
+          });
+        } else {
+          throw new Error(
+            "Enrollment failed with status: " + enrollmentResponse.status
+          );
+        }
+
+        const learnerResponse = await axios.post(
+          "/learner/create-learner",
+          newLearner
+        );
+
+        if (learnerResponse.status === 200) {
+          notification.success({
+            message: "Learner Created",
+            description: "Learner profile has been created successfully!",
+          });
+        } else {
+          throw new Error(
+            "Learner creation failed with status: " + learnerResponse.status
+          );
+        }
+      } catch (error) {
+        console.error("Error during the process:", error);
+
+        notification.error({
+          message: "Operation Failed",
+          description:
+            "An error occurred during the process. Please try again later.",
         });
-      } else {
-        throw new Error("Enrollment failed with status: " + enrollmentResponse.status);
       }
-  
-      const learnerResponse = await axios.post("/learner/create-learner", newLearner);
-  
-      if (learnerResponse.status === 200) {
-        notification.success({
-          message: "Learner Created",
-          description: "Learner profile has been created successfully!",
-        });
-      } else {
-        throw new Error("Learner creation failed with status: " + learnerResponse.status);
-      }
-  
-    } catch (error) {
-      console.error("Error during the process:", error);
-  
-      notification.error({
-        message: "Operation Failed",
-        description: "An error occurred during the process. Please try again later.",
+    } else {
+      // Notify user that the course is already enrolled
+      notification.warning({
+        message: "Already Enrolled",
+        description: "You are already enrolled in this course!",
       });
     }
   };
@@ -173,15 +197,22 @@ const CoursePage = () => {
                   Course ID {course.courseId}
                 </h2>
 
-                <ul style={{
-                  fontSize: "20px"
-                }}>
+                <ul
+                  style={{
+                    fontSize: "20px",
+                  }}
+                >
                   {course.courseDetails.split(".").map(
                     (detail, index) =>
                       detail.trim() && (
-                        <li style={{
-                          paddingTop:"20px"
-                        }}key={index}>• &nbsp;{detail.trim()}.</li>
+                        <li
+                          style={{
+                            paddingTop: "20px",
+                          }}
+                          key={index}
+                        >
+                          • &nbsp;{detail.trim()}.
+                        </li>
                       )
                   )}
                 </ul>
@@ -199,8 +230,10 @@ const CoursePage = () => {
               </div>
 
               <div className="fixed bottom-20 right-20">
-                <button className="bg-green-500 text-white px-10 py-5 rounded text-[18px]"
-                onClick={handleEnrollment}>
+                <button
+                  className="bg-green-500 text-white px-10 py-5 rounded text-[18px]"
+                  onClick={handleEnrollment}
+                >
                   Enroll for this course
                 </button>
               </div>

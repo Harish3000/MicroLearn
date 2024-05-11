@@ -13,54 +13,59 @@ import java.util.Optional;
 @Service
 public class EnrollmentService {
 
-    private final EnrollmentRepo learnerRepository;
-    private final LearnerRepo learnerRepo2;
+    private final EnrollmentRepo enrollmentRepo;
+    private final LearnerRepo learnerRepo;
+
+//    Enrollment CRUD Services
 
     @Autowired
     public EnrollmentService(EnrollmentRepo learnerRepository, LearnerRepo learnerRepo2) {
-        this.learnerRepository = learnerRepository;
-        this.learnerRepo2 = learnerRepo2;
+        this.enrollmentRepo = learnerRepository;
+        this.learnerRepo = learnerRepo2;
     }
 
 
-    public Enrollment createLearner(Enrollment learner) {
+    public Enrollment enroll(Enrollment learner) {
         System.out.println("Saving data: " + learner);
-        return learnerRepository.save(learner);
+        return enrollmentRepo.save(learner);
     }
 
-    public Learner addLerner(Learner learner) {
-        return learnerRepo2.save(learner);
+    public List<Enrollment> getAllEnrolled() {
+        return enrollmentRepo.findAll();
     }
 
-    public List<Enrollment> getAllLearners() {
-        return learnerRepository.findAll();
-    }
 
-    public Enrollment getLearnerById(String enrollmentId) {
-        return learnerRepository.findById(enrollmentId).orElse(null);
+    public Enrollment getEnrollById(String enrollmentId) {
+        return enrollmentRepo.findById(enrollmentId).orElse(null);
     }
 
     public Enrollment updateEnrollment(String enrollmentId, Enrollment updatedEnrollment) {
-        Optional<Enrollment> existingEnrollment = learnerRepository.findById(enrollmentId);
+        Optional<Enrollment> existingEnrollment = enrollmentRepo.findById(enrollmentId);
         if (existingEnrollment.isPresent()) {
             Enrollment enrollment = existingEnrollment.get();
             enrollment.setLearnerId(updatedEnrollment.getLearnerId());
             enrollment.setCourseId(updatedEnrollment.getCourseId());
             enrollment.setPaymentId(updatedEnrollment.getPaymentId());
             // Add any other fields that need updating
-            return learnerRepository.save(enrollment);
+            return enrollmentRepo.save(enrollment);
         } else {
             return null;
         }
     }
 
-    public boolean deleteLearnerById(String enrollmentId) {
-        if (learnerRepository.existsById(enrollmentId)) {
-            learnerRepository.deleteById(enrollmentId);
+    public boolean unEnroll(String enrollmentId) {
+        if (enrollmentRepo.existsById(enrollmentId)) {
+            enrollmentRepo.deleteById(enrollmentId);
             return true;
         } else {
             return false;
         }
     }
+
+//    Learner CRUD Services
+    public Learner addLerner(Learner learner) {
+    return learnerRepo.save(learner);
+}
+
 
 }
