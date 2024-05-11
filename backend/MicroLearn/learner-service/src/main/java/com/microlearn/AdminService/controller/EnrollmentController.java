@@ -76,6 +76,15 @@ public class EnrollmentController {
         return ResponseEntity.ok(newLearner);
     }
 
+    @GetMapping("/get-one-learner/{id}")
+    public ResponseEntity<Learner> getLearnerById(@PathVariable("id") String learnerId) {
+        Learner learner = enrollmentService.getLearnerById(learnerId);
+        if (learner != null) {
+            return ResponseEntity.ok(learner);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
 
 
