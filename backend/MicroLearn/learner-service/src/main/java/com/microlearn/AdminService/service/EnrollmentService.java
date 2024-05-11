@@ -67,5 +67,9 @@ public class EnrollmentService {
     return learnerRepo.save(learner);
 }
 
+    public Learner getLearnerById(String learnerId) {
+        return learnerRepo.findById(learnerId).orElse(null);
+    }
+
 
 }
