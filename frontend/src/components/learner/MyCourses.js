@@ -8,6 +8,7 @@ export default function MyCourses() {
     const [userDetails, setUserDetails] = useState(null);
     const [courseList, setCourseList] = useState(null);
     const [courseIdObjects, setCourseIdObjects] = useState([]);
+    const [courseDetailsArray, setCourseDetailsArray] = useState([]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -53,6 +54,26 @@ export default function MyCourses() {
           setCourseIdObjects(courseIdObjects);
       }
   }, [courseList]);
+
+  useEffect(() => {
+    // Fetch course details for each courseIdObject
+    const fetchCourseDetails = async () => {
+        if (courseIdObjects.length > 0) {
+            const courseDetails = [];
+            for (const courseIdObject of courseIdObjects) {
+                try {
+                    const response = await axios.get(`/admin/course/${courseIdObject.id}`);
+                    courseDetails.push(response.data);
+                } catch (error) {
+                    console.error(`Error fetching course details for courseId ${courseIdObject.id}:`, error);
+                }
+            }
+            // Set the fetched course details in courseDetailsArray state
+            setCourseDetailsArray(courseDetails);
+        }
+    };
+    fetchCourseDetails();
+}, [courseIdObjects]);
       
     return (
         <div>
