@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, notification, Modal } from "antd";
+import { Table, Button, notification, Modal, Spin } from "antd";
 
 function PaymentData() {
   const [data, setData] = useState([]);
@@ -7,12 +7,16 @@ function PaymentData() {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedPaymentID, setSelectedPaymentID] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     fetch("/transaction/payments")
       .then((response) => response.json())
-      .then((data) => setData(data));
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      });
   }, []);
 
   const handleConfirm = (paymentID, email) => {
@@ -22,7 +26,7 @@ function PaymentData() {
   };
 
   const handleSendEmail = async () => {
-    setLoading(true); // Set loading state to true when sending email
+    setLoading(true);
     const emailData = {
       receiver: selectedEmail,
       title: "Payment confirmed",
@@ -63,7 +67,7 @@ function PaymentData() {
         message: "Failed to send email",
       });
     } finally {
-      setLoading(false); // Set loading state back to false
+      setLoading(false);
       setConfirmModalVisible(false);
     }
   };
@@ -86,7 +90,6 @@ function PaymentData() {
         notification.success({
           message: `Payment ID ${selectedPaymentID} deleted successfully!`,
         });
-        // Update data after deletion
         setData(data.filter((item) => item.paymentID !== selectedPaymentID));
       } else {
         throw new Error("Failed to delete payment");
@@ -175,13 +178,19 @@ function PaymentData() {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-3/4 p-10 bg-white rounded shadow-xl">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="paymentID"
-          scroll={{ y: 500 }}
-          pagination={false}
-        />
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="paymentID"
+            scroll={{ y: 500 }}
+            pagination={false}
+          />
+        )}
       </div>
       <Modal
         title="Confirmation"
@@ -194,7 +203,7 @@ function PaymentData() {
           <Button
             key="send"
             type="primary"
-            loading={loading} // Added loading state
+            loading={loading}
             onClick={handleSendEmail}
           >
             Send
