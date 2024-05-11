@@ -28,10 +28,6 @@ public class InstructorService
     }
 
 
-//    public Course createCourse(Course course){
-//        return courseRepo.save(course);
-//    }
-
 
     public Course createCourse(Course course) {
         Set<String> existingCourseIds = new HashSet<>();
@@ -54,22 +50,6 @@ public class InstructorService
         courseRepo.deleteById(courseId);
     }
 
-//    // Update a Course by ID
-//    public Course updateCourse(Course course) {
-//        Optional<Course> existingCourseOptional = courseRepo.findById(course.getCourseId());
-//
-//        if (existingCourseOptional.isPresent()) {
-//            Course existingCourse = existingCourseOptional.get();
-//            // Update relevant fields (replace with your logic)
-//            existingCourse.setCourseName(course.getCourseName()); // Example update
-//            existingCourse.setCourseDetails(course.getCourseDetails()); // Example update
-//            // ... update other fields as needed
-//
-//            return courseRepo.save(existingCourse);
-//        } else {
-//            throw new IllegalArgumentException("Course with ID " + course.getCourseId() + " not found");
-//        }
-//    }
 
     public Course updateCourse(Course course) {
         Optional<Course> existingCourseOptional = courseRepo.findById(course.getCourseId());
@@ -77,7 +57,6 @@ public class InstructorService
         if (existingCourseOptional.isPresent()) {
             Course existingCourse = existingCourseOptional.get();
 
-            // Update all course fields using the provided values from the course object
             existingCourse.setCourseId(course.getCourseId());
             existingCourse.setCourseName(course.getCourseName());
             existingCourse.setCourseDetails(course.getCourseDetails());

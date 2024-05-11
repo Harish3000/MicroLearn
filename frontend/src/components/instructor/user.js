@@ -9,8 +9,10 @@ const User = () => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [form] = Form.useForm();
-
   const [userDetails, setUserDetails] = useState({});
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [adVisible, setAdVisible] = useState(true);
+  const courseDetailsMaxLength = 100;
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -54,19 +56,21 @@ const User = () => {
       key: "name",
     },
     {
-      title: "Details",
-      dataIndex: "courseDetails",
-      key: "courseDetails",
-    },
-    {
       title: "Price",
       dataIndex: "price",
       key: "price",
     },
     {
-      title: "Instructor ID",
-      dataIndex: "instructorId",
-      key: "instructorId",
+      title: "Details",
+      dataIndex: "courseDetails",
+      key: "courseDetails",
+      render: (text) => (
+        <span>
+          {text.length > courseDetailsMaxLength
+            ? text.substring(0, courseDetailsMaxLength) + "..."
+            : text}
+        </span>
+      ),
     },
     {
       title: "Actions",
@@ -76,7 +80,9 @@ const User = () => {
           <Button type="primary" onClick={() => handleUpdate(record)}>
             Update
           </Button>{" "}
-          <Button type="danger" onClick={() => showDeleteModal(record)}>
+          <br />
+          <br />
+          <Button type="primary" danger onClick={() => showDeleteModal(record)}>
             Delete
           </Button>
         </div>
@@ -146,16 +152,65 @@ const User = () => {
     setAddModalVisible(false);
   };
 
+  const togglePopup = () => {
+    setPopupVisible(!popupVisible);
+  };
+
+  const toggleAd = () => {
+    setAdVisible(!adVisible);
+  };
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
-      <div className="w-auto p-9 bg-white rounded shadow-xl relative">
-        <Button type="primary" onClick={() => setAddModalVisible(true)}>
-          +
+      {/* Popup */}
+      <Modal
+        title="Important Message"
+        visible={popupVisible}
+        onCancel={togglePopup}
+        footer={[
+          <Button key="back" onClick={togglePopup}>
+            Close
+          </Button>,
+        ]}
+      >
+        <p>This is an important message for the user.</p>
+      </Modal>
+
+      {adVisible && (
+        <div className="ad-container">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_4Nj-MocjJl4deSsBtk6sVznLQ9CU945cAHZMI02jRg&s"
+            alt="Advertisement"
+          />
+          <Button onClick={toggleAd} className="close-ad-btn">
+            Close Ad
+          </Button>
+        </div>
+      )}
+
+      {/* Other content */}
+      <div className="w-full h-full p-12 bg-white rounded shadow-xl relative">
+        <Button
+          type="primary"
+          onClick={() => setAddModalVisible(true)}
+          style={{
+            position: "absolute",
+            top: "20px",
+            right: "20px",
+            zIndex: "1",
+          }}
+        >
+          + ADD
         </Button>
         <br />
         <br />
 
-        <Table columns={columns} dataSource={data} rowKey="courseId" />
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="courseId"
+          scroll={{ y: "calc(100vh - 240px)" }}
+        />
       </div>
       <div className="horizontal-modals-container">
         <Modal
@@ -220,8 +275,6 @@ const User = () => {
               </Form>
             </div>
             <div className="w-1/2 pl-4">
-              {/* <b>Contents</b> */}
-
               <Form form={form} layout="vertical">
                 <Form.Item name="courseImage" label="Course Image URL">
                   <Input />
