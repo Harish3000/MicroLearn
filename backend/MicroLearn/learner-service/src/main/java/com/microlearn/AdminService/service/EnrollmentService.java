@@ -71,5 +71,14 @@ public class EnrollmentService {
         return learnerRepo.findById(learnerId).orElse(null);
     }
 
+    public boolean deleteLearner(String learnerId) {
+        if (enrollmentRepo.existsById(learnerId)) {
+            enrollmentRepo.deleteById(learnerId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }
