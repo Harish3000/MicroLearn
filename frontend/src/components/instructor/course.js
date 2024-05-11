@@ -1,14 +1,5 @@
 import { AppstoreOutlined, UserOutlined } from "@ant-design/icons";
-import {
-  Breadcrumb,
-  Button,
-  Card,
-  Layout,
-  Menu,
-  Modal,
-  Rate,
-  Skeleton,
-} from "antd";
+import { Breadcrumb, Button, Card, Layout, Menu, Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -112,20 +103,17 @@ const Course = () => {
                   description={course.courseDetails}
                 />
                 <div className="mt-4">
-                  <p className="text-lg font-bold">Price: ${course.price}</p>
+                  <p className="text-lg font-bold">
+                    You need to do self study for this course 🤨
+                  </p>
                   <p className="text-lg">Instructor: {course.instructorId}</p>
-                  <div className="flex items-center mb-4">
-                    <Rate allowHalf defaultValue={4.2} />
-                    <span className="ml-2">
-                      {course.rating} ({5} ratings)
-                    </span>
-                  </div>
+
                   <Button
                     type="primary"
                     className="mt-4"
                     onClick={handleEnrollButtonClick}
                   >
-                    Enroll Now
+                    more info
                   </Button>
                   {course.content && (
                     <div className="mt-4">
@@ -157,7 +145,7 @@ const Course = () => {
         Course Platform ©2024 Created by Microlearn
       </Footer>
       <Modal
-        title="Enroll Confirmation"
+        title="Course Details"
         visible={enrollmentModalVisible}
         onOk={handleEnrollmentModalOk}
         onCancel={handleEnrollmentModalCancel}
@@ -173,9 +161,7 @@ const Course = () => {
             alt="course"
             style={{ width: "100%", marginBottom: 16 }}
           />
-          <p style={{ color: "#1890ff" }}>
-            Did you want to enroll in the course {course.courseName}?
-          </p>
+          <p style={{ color: "#1890ff" }}>{course.courseName}?</p>
         </div>
       </Modal>
     </Layout>
