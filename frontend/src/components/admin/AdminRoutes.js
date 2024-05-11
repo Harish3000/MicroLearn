@@ -4,6 +4,7 @@ import Courses from "./Courses";
 import AdminProfile from "./AdminProfile";
 import AdminHome from "./AdminHome";
 import UserData from "./UserData";
+import Enrollments from "../learner/Enrollments";
 
 function AdminRoutes() {
   return (
@@ -12,6 +13,7 @@ function AdminRoutes() {
       <Route path="/profile" element={<AdminProfile />} />
       <Route path="/courses" element={<Courses />} />
       <Route path="/users" element={<UserData />} />
+      <Route path="/enrollment" element={<Enrollments />} />
     </Routes>
   );
 }

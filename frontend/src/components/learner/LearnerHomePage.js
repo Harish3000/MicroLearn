@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../firebase";
+import { Button } from "antd";
 
 const LearnerHomePage = () => {
   const [courses, setCourses] = useState([]);
@@ -69,6 +70,15 @@ const LearnerHomePage = () => {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div className="fixed bottom-6 right-6">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded"
+          onClick={() => navigate("/learner/my-courses")}
+        >
+          View My Courses
+        </button>
       </div>
     </div>
   );
