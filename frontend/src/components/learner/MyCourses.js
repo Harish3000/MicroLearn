@@ -3,12 +3,14 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function MyCourses() {
   const [userDetails, setUserDetails] = useState(null);
   const [courseList, setCourseList] = useState(null);
   const [courseIdObjects, setCourseIdObjects] = useState([]);
   const [courseDetailsArray, setCourseDetailsArray] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -82,6 +84,11 @@ export default function MyCourses() {
     };
     fetchCourseDetails();
   }, [courseIdObjects]);
+
+  const goToCoursePage = (courseId) => {
+    navigate(`/instructor/course/${courseId}`);
+  };
+
   return (
     <div className="container mx-auto">
       <h2
@@ -100,7 +107,7 @@ export default function MyCourses() {
                 style={{ width: "100%" }}
               />
               <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                <button className="bg-blue-500 text-white px-6 py-3 mr-4 font-semibold">Go to Course</button>
+                <button className="bg-blue-500 text-white px-6 py-3 mr-4 font-semibold" onClick={() => goToCoursePage(course.courseId)}>Go to Course</button>
                 <button className="bg-red-500 text-white px-6 py-3 font-semibold">Unenroll</button>
               </div>
             </div>
