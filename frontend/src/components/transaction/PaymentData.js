@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, notification } from "antd";
+import { Table, Button, notification, Modal } from "antd";
 
 function PaymentData() {
   const [data, setData] = useState([]);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [selectedPaymentID, setSelectedPaymentID] = useState(null);
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [loading, setLoading] = useState(false); // Added loading state
 
   useEffect(() => {
     fetch("/transaction/payments")
@@ -10,15 +14,60 @@ function PaymentData() {
       .then((data) => setData(data));
   }, []);
 
-  const handleConfirm = (paymentID) => {
-    // Handle confirm logic here
-    notification.success({
-      message: `Payment ID ${paymentID} confirmed successfully!`,
-    });
+  const handleConfirm = (paymentID, email) => {
+    setSelectedPaymentID(paymentID);
+    setSelectedEmail(email);
+    setConfirmModalVisible(true);
+  };
+
+  const handleSendEmail = async () => {
+    setLoading(true); // Set loading state to true when sending email
+    const emailData = {
+      receiver: selectedEmail,
+      title: "Payment confirmed",
+      message: "Your payment is confirmed by admin",
+      details: {
+        paymentID: selectedPaymentID,
+        courseId: data.find((item) => item.paymentID === selectedPaymentID)
+          .courseId,
+        userId: data.find((item) => item.paymentID === selectedPaymentID)
+          .userId,
+        learnerName: data.find((item) => item.paymentID === selectedPaymentID)
+          .learnerName,
+        amount: data.find((item) => item.paymentID === selectedPaymentID)
+          .amount,
+        date: data.find((item) => item.paymentID === selectedPaymentID).date,
+      },
+    };
+
+    try {
+      const response = await fetch("/transaction/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (response.ok) {
+        notification.success({
+          message: "Email sent successfully!",
+        });
+      } else {
+        throw new Error("Failed to send email");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      notification.error({
+        message: "Failed to send email",
+      });
+    } finally {
+      setLoading(false); // Set loading state back to false
+      setConfirmModalVisible(false);
+    }
   };
 
   const handleDecline = (paymentID) => {
-    // Handle decline logic here
     notification.error({
       message: `Payment ID ${paymentID} declined!`,
     });
@@ -72,7 +121,7 @@ function PaymentData() {
       render: (_, record) => (
         <Button
           type="primary"
-          onClick={() => handleConfirm(record.paymentID)}
+          onClick={() => handleConfirm(record.paymentID, record.email)}
           className="bg-blue-500 hover:bg-blue-700"
         >
           Confirm
@@ -106,6 +155,26 @@ function PaymentData() {
           pagination={false}
         />
       </div>
+      <Modal
+        title="Confirmation"
+        visible={confirmModalVisible}
+        onCancel={() => setConfirmModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setConfirmModalVisible(false)}>
+            Cancel
+          </Button>,
+          <Button
+            key="send"
+            type="primary"
+            loading={loading} // Added loading state
+            onClick={handleSendEmail}
+          >
+            Send
+          </Button>,
+        ]}
+      >
+        Are you sure you want to send confirmation email?
+      </Modal>
     </div>
   );
 }

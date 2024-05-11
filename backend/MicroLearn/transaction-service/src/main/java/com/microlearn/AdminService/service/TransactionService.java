@@ -1,9 +1,8 @@
 package com.microlearn.AdminService.service;
 
+import com.microlearn.AdminService.entity.EmailRequest;
 import com.microlearn.AdminService.entity.Payment;
-import com.microlearn.AdminService.entity.Transaction;
 import com.microlearn.AdminService.repo.PaymentRepo;
-import com.microlearn.AdminService.repo.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,14 +17,16 @@ import java.util.Map;
 public class TransactionService
 {
 
-     @Autowired
-    private TransactionRepo transactionRepo;
+
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private PaymentRepo paymentRepo;
+
+    @Autowired
+    private GenericEmailService emailService;
 
 
 
@@ -78,6 +79,11 @@ public class TransactionService
         paymentRepo.deleteById(id);
         return existingPayment;
     }
+
+    public void sendEmail(EmailRequest request) {
+        emailService.sendEmail(request.getReceiver(), request.getTitle(), request.getMessage(), (Map<String, String>) request.getDetails());
+    }
+
 
 
 }
