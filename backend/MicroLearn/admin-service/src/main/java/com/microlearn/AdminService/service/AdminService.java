@@ -66,6 +66,7 @@ public class AdminService {
         existingCourse.setPrice(courseRequest.getPrice());
         existingCourse.setApproved(courseRequest.isApproved());
         existingCourse.setInstructorId(courseRequest.getInstructorId());
+        existingCourse.setContent(courseRequest.getContent()); // new line
         return courseRepo.save(existingCourse);
     }
 
