@@ -17,7 +17,7 @@ const AdminChart = () => {
         setChartData(cumulativeData);
         setLoading(false); // Set loading to false after data is loaded
       } catch (error) {
-        console.error("Error fetching user activity data:", error);
+        console.error("Error fetching user  data:", error);
       }
     };
 
