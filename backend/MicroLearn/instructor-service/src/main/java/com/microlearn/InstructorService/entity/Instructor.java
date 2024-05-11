@@ -16,6 +16,8 @@ public class Instructor {
 
     @Id
     private String instructorId;
-    private String name;
+    private String instructorName;
+    private String email;
+    private String courseId;
 
 }
