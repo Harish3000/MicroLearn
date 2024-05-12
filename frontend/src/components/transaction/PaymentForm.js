@@ -33,14 +33,49 @@ const PaymentForm = () => {
     })
       .then((response) => {
         if (response.ok) {
-          notification.success({
-            message: "Redirecting to secure payment gateway. Please wait...",
-            duration: 2,
-          });
-          setTimeout(() => {
-            window.location.href =
-              "https://buy.stripe.com/test_cN28yj4lH1EQ3TOcMN";
-          }, 3000);
+          fetch("/transaction/sendEmail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              receiver: paymentData.email,
+              title: "Payment Confirmation",
+              message: "Your purchase has been confirmed",
+              details: {
+                paymentID: paymentId,
+                type: paymentData.type,
+                userId: learnerId,
+                learnerName: paymentData.learnerName,
+                email: paymentData.email,
+                amount: paymentData.amount,
+                date: paymentData.date,
+                courseId: courseId,
+              },
+            }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                notification.success({
+                  message:
+                    "Redirecting to secure payment gateway. Please wait...",
+                  duration: 2,
+                });
+                setTimeout(() => {
+                  window.location.href =
+                    "https://buy.stripe.com/test_cN28yj4lH1EQ3TOcMN";
+                }, 3000);
+              } else {
+                throw new Error("Failed to send email confirmation");
+              }
+            })
+            .catch((error) => {
+              console.error("Error sending email confirmation:", error);
+              notification.error({
+                message: "Email Confirmation Failed",
+                description: "Please try again later.",
+              });
+            });
         } else {
           throw new Error("Failed to submit payment");
         }

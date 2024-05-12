@@ -66,25 +66,53 @@ function Users() {
   const handleDeleteConfirm = async () => {
     try {
       setLoading(true);
-
+      // Delete user from Firestore
       const usersRef = collection(db, "Users");
       const userQuery = query(usersRef, where("userId", "==", deleteUserId));
       const querySnapshot = await getDocs(userQuery);
       querySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
-
+      // Filter out the deleted user from state
       setData(data.filter((item) => item.userId !== deleteUserId));
 
+      // Send delete request to '/admin/learner/{userId}' endpoint
       await fetch(`/admin/learner/${deleteUserId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          // Add any additional headers if needed
         },
       });
 
-      setDeleteConfirmVisible(false);
+      // Fetch user data to get email
+      const userData = data.find((item) => item.userId === deleteUserId);
+      const receiverEmail = userData.email;
+
+      // Construct email payload
+      const emailPayload = {
+        receiver: receiverEmail,
+        title: "Profile Deletion Notification",
+        message: "Your profile has been deleted by the administrator.",
+        details: {
+          Reason: "Violation of site policy",
+          Action: "Please contact the administrator for account reinstatement.",
+        },
+      };
+
+      // Send POST request to '/transaction/sendEmail'
+      await fetch("/transaction/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any additional headers if needed
+        },
+        body: JSON.stringify(emailPayload),
+      });
+
+      // Reset loading state and close delete confirmation modal
       setLoading(false);
+      setDeleteConfirmVisible(false);
     } catch (error) {
       console.error("Error deleting user:", error);
       notification.error({
@@ -263,11 +291,11 @@ function Users() {
           visible={deleteConfirmVisible}
           onOk={handleDeleteConfirm}
           onCancel={handleDeleteCancel}
-          okText="Delete"
-          okButtonProps={{ danger: true }}
+          okText={loading ? <Spin /> : "Delete"}
+          okButtonProps={{ loading: loading, danger: true }}
           cancelText="Cancel"
         >
-          <p>Are you sure you want to delete this user ?</p>
+          <p>Are you sure you want to delete this user?</p>
         </Modal>
       </div>
     </div>
