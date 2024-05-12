@@ -90,25 +90,21 @@ export default function MyCourses() {
   };
 
   return (
-    <div className="container mx-auto">
-      <h2
-        className="text-3xl font-semibold mb-4"
-        style={{ textAlign: "center" }}
-      >
+    <div>
+      <h2>
         My Courses
       </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
         {courseDetailsArray.map((course, index) => (
-          <div key={index} className="container relative group">
-            <div className="relative">
+          <div key={index} >
+            <div>
               <img
                 src={course.courseImage}
                 alt={course.courseName}
-                style={{ width: "100%" }}
               />
-              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                <button className="bg-blue-500 text-white px-6 py-3 mr-4 font-semibold" onClick={() => goToCoursePage(course.courseId)}>Go to Course</button>
-                <button className="bg-red-500 text-white px-6 py-3 font-semibold">Unenroll</button>
+              <div>
+                <button onClick={() => goToCoursePage(course.courseId)}>Go to Course</button>
+                <button >Unenroll</button>
               </div>
             </div>
             <div>
