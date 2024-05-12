@@ -66,13 +66,23 @@ function Users() {
   const handleDeleteConfirm = async () => {
     try {
       setLoading(true);
+
       const usersRef = collection(db, "Users");
       const userQuery = query(usersRef, where("userId", "==", deleteUserId));
       const querySnapshot = await getDocs(userQuery);
       querySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
+
       setData(data.filter((item) => item.userId !== deleteUserId));
+
+      await fetch(`/admin/learner/${deleteUserId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       setDeleteConfirmVisible(false);
       setLoading(false);
     } catch (error) {

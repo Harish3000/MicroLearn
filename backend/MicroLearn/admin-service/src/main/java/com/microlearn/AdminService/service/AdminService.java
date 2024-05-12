@@ -4,6 +4,7 @@ import com.microlearn.AdminService.entity.Admin;
 import com.microlearn.AdminService.entity.Course;
 import com.microlearn.AdminService.repo.AdminRepo;
 import com.microlearn.AdminService.repo.CourseRepo;
+import com.microlearn.AdminService.repo.LearnerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,10 @@ public class AdminService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private LearnerRepo learnerRepo;
+
 
 
 
@@ -80,5 +85,9 @@ public class AdminService {
         Course existingCourse = courseRepo.findById(id).orElse(null);
         existingCourse.setApproved(!existingCourse.isApproved());
         return courseRepo.save(existingCourse);
+    }
+
+    public void deleteLearnerById(String id) {
+        learnerRepo.deleteById(id);
     }
 }

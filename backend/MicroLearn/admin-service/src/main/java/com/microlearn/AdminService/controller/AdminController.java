@@ -53,4 +53,10 @@ public class AdminController {
     public Course toggleApproval(@PathVariable String id) {
         return adminService.toggleApproval(id);
     }
+
+
+    @DeleteMapping("/learner/{id}")
+    public void deleteLearner(@PathVariable String id) {
+        adminService.deleteLearnerById(id);
+    }
 }
