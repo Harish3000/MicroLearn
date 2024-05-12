@@ -76,27 +76,49 @@ const CoursePage = () => {
       return;
     }
 
-    const learnerId = userDetails.userId;
-    const courseId = course.courseId;
-    const paymentId = "PAY001"; // Hardcoded
+    try {
+      // Fetch payment data from the endpoint
+      const paymentResponse = await axios.get("/transaction/payments");
+      const payments = paymentResponse.data;
 
-    const newEnrollment = {
-      learnerId,
-      courseId,
-      paymentId,
-    };
+      // Extract paymentIDs
+      const paymentIDs = payments.map((payment) => payment.paymentID);
 
-    const updatedCourseIdLearner = [...learner.courseIdList];
+      // Sort paymentIDs
+      paymentIDs.sort();
 
-    if (!updatedCourseIdLearner.includes(courseId)) {
-      updatedCourseIdLearner.push(courseId);
+      // Get the last paymentID
+      const lastPaymentID = paymentIDs[paymentIDs.length - 1];
 
-      const newLearner = {
-        ...learner,
-        courseIdList: updatedCourseIdLearner,
+      // Extract the numeric part of the last paymentID
+      const lastPaymentIDNumeric = parseInt(lastPaymentID.slice(3));
+
+      // Increment the numeric part to create a new paymentID
+      const newPaymentID = `PAY${String(lastPaymentIDNumeric + 1).padStart(
+        3,
+        "0"
+      )}`;
+
+      // Continue with enrollment process using the newPaymentID
+      const learnerId = userDetails.userId;
+      const courseId = course.courseId;
+
+      const newEnrollment = {
+        learnerId,
+        courseId,
+        paymentId: newPaymentID, // Use the newPaymentID
       };
 
-      try {
+      const updatedCourseIdLearner = [...learner.courseIdList];
+
+      if (!updatedCourseIdLearner.includes(courseId)) {
+        updatedCourseIdLearner.push(courseId);
+
+        const newLearner = {
+          ...learner,
+          courseIdList: updatedCourseIdLearner,
+        };
+
         const enrollmentResponse = await axios.post(
           "/learner/enroll",
           newEnrollment
@@ -124,7 +146,14 @@ const CoursePage = () => {
 
             // Navigate to /transaction after 3 seconds
             setTimeout(() => {
-              navigate("/transaction");
+              navigate("/transaction", {
+                state: {
+                  paymentId: newPaymentID, // Pass paymentId
+                  courseId: courseId, // Pass courseId
+                  learnerId: learnerId, // Pass learnerId
+                  amount: course.price, // Pass course price
+                },
+              });
             }, 2000);
           } else {
             throw new Error(
@@ -136,19 +165,18 @@ const CoursePage = () => {
             "Enrollment failed with status: " + enrollmentResponse.status
           );
         }
-      } catch (error) {
-        console.error("Error during the process:", error);
-
-        notification.error({
-          message: "Operation Failed",
-          description:
-            "An error occurred during the process. Please try again later.",
+      } else {
+        notification.warning({
+          message: "Already Enrolled",
+          description: "You are already enrolled in this course!",
         });
       }
-    } else {
-      notification.warning({
-        message: "Already Enrolled",
-        description: "You are already enrolled in this course!",
+    } catch (error) {
+      console.error("Error during the process:", error);
+      notification.error({
+        message: "Operation Failed",
+        description:
+          "An error occurred during the process. Please try again later.",
       });
     }
   };

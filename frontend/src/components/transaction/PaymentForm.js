@@ -1,16 +1,20 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { notification } from "antd";
 
 const PaymentForm = () => {
+  const location = useLocation();
+  const { paymentId, courseId, learnerId, amount } = location.state;
+
   const [paymentData, setPaymentData] = useState({
-    paymentID: "",
+    paymentID: paymentId,
     type: "",
-    userId: "",
+    userId: learnerId,
     learnerName: "",
     email: "",
-    amount: "",
+    amount: amount,
     date: new Date().toISOString().slice(0, 10),
-    courseId: "",
+    courseId: courseId,
   });
 
   const handleChange = (e) => {
@@ -42,7 +46,6 @@ const PaymentForm = () => {
         }
       })
       .catch((error) => {
-        // Handle error
         console.error("Error submitting payment:", error);
         notification.error({
           message: "Payment Submission Failed",
@@ -63,6 +66,65 @@ const PaymentForm = () => {
       >
         <h2 className="text-2xl mb-4">Payment Details</h2>
         <div className="mb-4">
+          <label htmlFor="learnerName" className="block text-gray-700">
+            Learner Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="learnerName"
+            name="learnerName"
+            value={paymentData.learnerName}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-gray-700">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={paymentData.email}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="date" className="block text-gray-700">
+            Date <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={paymentData.date}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="type" className="block text-gray-700">
+            Type <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="type"
+            name="type"
+            value={paymentData.type}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            required
+          >
+            <option value="">Select Type</option>
+            <option value="credit">Credit Card</option>
+            <option value="debit">Debit Card</option>
+          </select>
+        </div>
+        <div className="mb-4">
           <label htmlFor="paymentID" className="block text-gray-700">
             Payment ID
           </label>
@@ -73,19 +135,7 @@ const PaymentForm = () => {
             value={paymentData.paymentID}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="type" className="block text-gray-700">
-            Type
-          </label>
-          <input
-            type="text"
-            id="type"
-            name="type"
-            value={paymentData.type}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            disabled
           />
         </div>
         <div className="mb-4">
@@ -99,45 +149,7 @@ const PaymentForm = () => {
             value={paymentData.userId}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="learnerName" className="block text-gray-700">
-            Learner Name
-          </label>
-          <input
-            type="text"
-            id="learnerName"
-            name="learnerName"
-            value={paymentData.learnerName}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={paymentData.email}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="amount" className="block text-gray-700">
-            Amount
-          </label>
-          <input
-            type="text"
-            id="amount"
-            name="amount"
-            value={paymentData.amount}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            disabled
           />
         </div>
         <div className="mb-4">
@@ -151,19 +163,21 @@ const PaymentForm = () => {
             value={paymentData.courseId}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            disabled
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="date" className="block text-gray-700">
-            Date
+          <label htmlFor="amount" className="block text-gray-700">
+            Amount
           </label>
           <input
-            type="date"
-            id="date"
-            name="date"
-            value={paymentData.date}
+            type="text"
+            id="amount"
+            name="amount"
+            value={paymentData.amount}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-400 shadow-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            disabled
           />
         </div>
         <div className="flex justify-end">
