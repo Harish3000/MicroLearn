@@ -13,7 +13,6 @@ const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
-  const [courseIdLearner, setCourseIdLearner] = useState([]);
   const [learner, setLearner] = useState(null);
 
   useEffect(() => {
@@ -60,7 +59,7 @@ const CoursePage = () => {
           const response = await axios.get(
             `/learner/get-one-learner/${userDetails.userId}`
           );
-          setLearner(response.data); // Update the learner state
+          setLearner(response.data);
           console.log(response.data);
         }
       } catch (error) {
@@ -78,8 +77,6 @@ const CoursePage = () => {
     }
 
     const learnerId = userDetails.userId;
-    const learnerName = userDetails.firstName;
-    const email = userDetails.email;
     const courseId = course.courseId;
     const paymentId = "PAY001"; // Hardcoded
 
@@ -141,7 +138,6 @@ const CoursePage = () => {
         });
       }
     } else {
-      // Notify user that the course is already enrolled
       notification.warning({
         message: "Already Enrolled",
         description: "You are already enrolled in this course!",

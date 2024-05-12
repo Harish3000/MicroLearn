@@ -5,6 +5,8 @@ import { db } from "../firebase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
+import EnrollmentTrendChart from "./EnrollmentTrendsChart";
+import CourseDistributionChart from "./CourseDistributionChart";
 
 export default function MyCourses() {
   const [userDetails, setUserDetails] = useState(null);
@@ -13,6 +15,19 @@ export default function MyCourses() {
   const [courseDetailsArray, setCourseDetailsArray] = useState([]);
   const [learner, setLearner] = useState(null);
   const navigate = useNavigate();
+
+  const enrollmentData = [
+    { date: "2024-05-01", enrollments: 10 },
+    { date: "2024-05-02", enrollments: 15 },
+    { date: "2024-05-03", enrollments: 20 },
+    
+  ];
+
+  const courseData = [
+    { courseId: "SE001", enrollments: 30 },
+    { courseId: "SE002", enrollments: 25 },
+    { courseId: "SE003", enrollments: 15 },
+  ];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -133,7 +148,6 @@ export default function MyCourses() {
                 message: "Unenrollment Successful",
                 description: "You have successfully unenrolled from the course!",
             });
-            // Optionally, you can also update the course list to reflect the changes
             setCourseDetailsArray(prevCourses => prevCourses.filter(course => course.courseId !== courseId));
         } else {
             throw new Error(
@@ -273,6 +287,32 @@ export default function MyCourses() {
             </div>
           </div>
         ))}
+      </div>
+      <div>
+        <h2 style={{
+          textAlign: "center",
+          fontSize: "25px",
+          paddingTop: "60px",
+          paddingBottom: "20px",
+          fontWeight: "600"
+        }}>Hello {userDetails.firstName}! Track your progress here!</h2>
+        <div style={{
+  padding: "20px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+}}>
+      <EnrollmentTrendChart enrollmentData={enrollmentData} />
+      </div>
+
+      <div style={{
+  padding: "20px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+}}>
+      <CourseDistributionChart courseData={courseData} />
+      </div>
       </div>
     </div>
   );
