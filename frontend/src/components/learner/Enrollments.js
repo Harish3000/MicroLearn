@@ -11,7 +11,7 @@ function Enrollments() {
   const [learnerToDelete, setLearnerToDelete] = useState(null);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [learnerToUpdate, setLearnerToUpdate] = useState(null);
-  const [form] = Form.useForm(); // Form instance
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchLearners = async () => {
@@ -109,7 +109,7 @@ function Enrollments() {
       width: 250,
       render: (text, record) => (
         <div className="flex space-x-2 p-2">
-          <button className="bg-green-500 text-white px-4 py-2 rounded" style={{ marginLeft: '60px', marginRight: "80px" }}>
+          <button className="bg-green-500 text-white px-4 py-2 rounded" style={{ marginLeft: '60px', marginRight: "80px" }} onClick={() => showUpdateModal(record)} >
             Update
           </button>
           <button
