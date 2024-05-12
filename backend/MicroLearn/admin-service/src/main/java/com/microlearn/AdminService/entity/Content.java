@@ -4,16 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Transaction")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transaction {
+
+public class Content {
 
     @Id
-    private String transactionId;
-    private String name;
+    private String contentId;
+    private String contentTitle;
+    private String contentDescription;
+    private String contentUrl;
 
 }

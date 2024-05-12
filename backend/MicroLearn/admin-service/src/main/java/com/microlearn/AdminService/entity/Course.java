@@ -20,5 +20,6 @@ public class Course {
     private String price;
     private boolean Approved;
     private String instructorId;
+    private Content content;
 
 }

@@ -73,8 +73,12 @@ const LearnerHomePage = () => {
       </div>
 
       <div className="fixed bottom-6 right-6">
-        <button className="bg-green-500 text-white px-4 py-2 rounded"
-            onClick={() => navigate("/learner/my-courses")}>View My Courses</button>
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded"
+          onClick={() => navigate("/learner/my-courses")}
+        >
+          View My Courses
+        </button>
       </div>
     </div>
   );

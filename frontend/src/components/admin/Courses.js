@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, notification } from "antd";
+import { Table, Button, notification, Spin } from "antd";
 
 function Courses() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/admin/courses")
       .then((response) => response.json())
-      .then((data) => setData(data));
+      .then((data) => {
+        setData(data);
+        setLoading(false); // Set loading to false after data is fetched
+      });
   }, []);
 
   const approveCourse = (record) => {
-    // Extracting data from the record
     const { courseId, approved } = record;
-
-    // Sending PUT request to toggle approval
     fetch(`/admin/course/toggleApproval/${courseId}`, {
       method: "PUT",
       headers: {
@@ -23,17 +24,13 @@ function Courses() {
     })
       .then((response) => {
         if (response.ok) {
-          // If response is 200 OK, show success notification
           notification.success({
             message: approved ? "Course is Revoked!" : "Course is Approved!",
           });
-
-          // Delay refreshing the page after showing the success notification
           setTimeout(() => {
             window.location.reload();
-          }, 2000); // Adjust delay time as needed
+          }, 2000);
         } else {
-          // If response is not OK, show error notification
           notification.error({
             message: "Failed to approve/revoke course",
           });
@@ -48,16 +45,8 @@ function Courses() {
   };
 
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "courseId",
-      key: "courseId",
-    },
-    {
-      title: "Course Name",
-      dataIndex: "courseName",
-      key: "courseName",
-    },
+    { title: "ID", dataIndex: "courseId", key: "courseId" },
+    { title: "Course Name", dataIndex: "courseName", key: "courseName" },
     {
       title: "Course Details",
       dataIndex: "courseDetails",
@@ -65,16 +54,8 @@ function Courses() {
       ellipsis: true,
       width: "auto",
     },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Instructor ID",
-      dataIndex: "instructorId",
-      key: "instructorId",
-    },
+    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Instructor ID", dataIndex: "instructorId", key: "instructorId" },
     {
       title: "Status",
       dataIndex: "approved",
@@ -109,13 +90,19 @@ function Courses() {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-3/4 p-10 bg-white rounded shadow-xl">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="courseId"
-          scroll={{ y: 500 }}
-          pagination={false}
-        />
+        {loading ? ( // Render spinner if loading
+          <div className="flex items-center justify-center">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="courseId"
+            scroll={{ y: 500 }}
+            pagination={false}
+          />
+        )}
       </div>
     </div>
   );

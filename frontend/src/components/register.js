@@ -40,6 +40,15 @@ function Register() {
     fetchLastUserId();
   }, []);
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // January is 0!
+    const yyyy = today.getFullYear();
+
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -65,6 +74,7 @@ function Register() {
           firstName: fname,
           lastName: lname,
           role: role,
+          date: getCurrentDate(),
         });
         toast.success("User Registered Successfully!!", {
           position: "top-center",

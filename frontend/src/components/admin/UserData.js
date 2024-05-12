@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Table, notification, Modal, Button, Form, Input, Select } from "antd";
+import {
+  Table,
+  notification,
+  Modal,
+  Button,
+  Form,
+  Input,
+  Select,
+  Spin,
+} from "antd";
 import { db } from "../firebase";
 import {
   collection,
@@ -20,6 +29,7 @@ function Users() {
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [roleOptions, setRoleOptions] = useState(["Instructor", "Learner"]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +41,7 @@ function Users() {
           ...doc.data(),
         }));
         setData(usersData);
+        setIsLoadingData(false);
       } catch (error) {
         console.error("Error fetching users:", error);
         notification.error({
@@ -163,13 +174,19 @@ function Users() {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-4/5 p-10 bg-white rounded shadow-xl">
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey="userId"
-          scroll={{ y: 500 }}
-          pagination={false}
-        />
+        {isLoadingData ? (
+          <div className="text-center">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="userId"
+            scroll={{ y: 500 }}
+            pagination={false}
+          />
+        )}
         <Modal
           title="Update User"
           visible={visible}

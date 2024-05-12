@@ -1,7 +1,7 @@
 package com.microlearn.AdminService.controller;
 
+import com.microlearn.AdminService.entity.EmailRequest;
 import com.microlearn.AdminService.entity.Payment;
-import com.microlearn.AdminService.entity.Transaction;
 import com.microlearn.AdminService.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,8 @@ public class TransactionController {
 
      @Autowired
      private TransactionService transactionService;
+
+
 
 
 //    @GetMapping("/courses")
@@ -46,6 +48,12 @@ public class TransactionController {
     @DeleteMapping("/payment/{id}")
     public Payment deletePayment(@PathVariable String id) {
         return transactionService.deletePayment(id);
+    }
+
+    @PostMapping("/sendEmail")
+    public ResponseEntity<String> sendEmail(@RequestBody EmailRequest request) {
+        transactionService.sendEmail(request);
+        return ResponseEntity.ok("Email sent successfully");
     }
 
 
