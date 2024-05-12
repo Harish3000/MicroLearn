@@ -5,7 +5,7 @@ import {
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, Modal, Typography } from "antd";
+import { Button, Form, Input, Layout, Menu, Modal, Typography } from "antd";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
@@ -18,7 +18,14 @@ const { Title } = Typography;
 function InstructorProfile() {
   const [userDetails, setUserDetails] = useState(null);
   const [guideModalVisible, setGuideModalVisible] = useState(false);
+  const [emailFormVisible, setEmailFormVisible] = useState(false);
   const navigate = useNavigate();
+  const [emailFormData, setEmailFormData] = useState({
+    receiver: "",
+    title: "",
+    message: "",
+    details: {},
+  });
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -51,6 +58,33 @@ function InstructorProfile() {
       console.error("Error logging out:", error.message);
     }
   }
+
+  async function handleSendEmail(emailData) {
+    try {
+      const response = await fetch("/transaction/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (response.ok) {
+        console.log("Email sent successfully!");
+
+        setEmailFormVisible(false);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to send email:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error sending email:", error.message);
+    }
+  }
+
+  const handleEmailFormOpen = () => {
+    setEmailFormVisible(true);
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -181,6 +215,16 @@ function InstructorProfile() {
                       View Guides
                     </Button>
                   </div>
+                  <div className="mt-8">
+                    <Button
+                      type="primary"
+                      size="large"
+                      onClick={handleEmailFormOpen}
+                      icon={<UploadOutlined />}
+                    >
+                      Send Email
+                    </Button>
+                  </div>
                 </div>
               </>
             ) : (
@@ -203,57 +247,53 @@ function InstructorProfile() {
           onOk={() => setGuideModalVisible(false)}
           onCancel={() => setGuideModalVisible(false)}
           width={800}
+        ></Modal>
+        <Modal
+          title="Create Email"
+          visible={emailFormVisible}
+          onCancel={() => setEmailFormVisible(false)}
+          footer={null}
         >
-          <ol>
-            <li>
-              <Title level={3}>Understanding Your Role:</Title>
-              <ul>
-                <li>
-                  As an instructor, your responsibility is to educate and guide
-                  students in their learning.
-                </li>
-                <li>
-                  Your role involves creating engaging and informative course
-                  materials, delivering lectures, and providing feedback to
-                  students.
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Title level={3}>Creating Effective Course Materials:</Title>
-              <ul>
-                <li>
-                  Design your course materials with clear learning objectives in
-                  mind.
-                </li>
-                <li>
-                  Use a variety of resources such as slides videos and
-                  interactive quizzes to cater to different learning styles.
-                </li>
-                <li>
-                  Ensure that your content is well-structured and easy to
-                  navigate.
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Title level={3}>Engaging Students:</Title>
-              <ul>
-                <li>
-                  Encourage active participation through discussions, group
-                  activities, and hands-on projects.
-                </li>
-                <li>
-                  Foster a supportive learning environment where students feel
-                  comfortable asking questions and sharing their ideas.
-                </li>
-                <li>
-                  Provide timely feedback on assignments and assessments to help
-                  students track their progress.
-                </li>
-              </ul>
-            </li>
-          </ol>
+          <Form
+            onFinish={(values) => {
+              setEmailFormData(values);
+              handleSendEmail(values);
+            }}
+            layout="vertical"
+            initialValues={emailFormData}
+          >
+            <Form.Item
+              label="Receiver"
+              name="receiver"
+              rules={[
+                { required: true, message: "Please input receiver's email!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Title"
+              name="title"
+              rules={[{ required: true, message: "Please input email title!" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Message"
+              name="message"
+              rules={[
+                { required: true, message: "Please input email message!" },
+              ]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+            {/* Additional details can be added here */}
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Send Email
+              </Button>
+            </Form.Item>
+          </Form>
         </Modal>
       </Layout>
     </Layout>

@@ -1,4 +1,4 @@
-import { AppstoreOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Card, Layout, Menu, Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -73,9 +73,9 @@ const Course = () => {
         <div className="flex justify-between items-center">
           <div className="logo text-xl font-bold">Microlearn</div>
           <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["2"]}>
-            <Menu.Item key="1" icon={<UserOutlined />}>
+            {/* <Menu.Item key="1" icon={<UserOutlined />}>
               <Link to="/">instructor</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="2" icon={<AppstoreOutlined />}>
               <Link to="/courses">Courses</Link>
             </Menu.Item>
