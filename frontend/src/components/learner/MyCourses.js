@@ -20,14 +20,34 @@ export default function MyCourses() {
     { date: "2024-05-01", enrollments: 10 },
     { date: "2024-05-02", enrollments: 15 },
     { date: "2024-05-03", enrollments: 20 },
-    
+    { date: "2024-05-04", enrollments: 18 },
+    { date: "2024-05-05", enrollments: 22 },
+    { date: "2024-05-06", enrollments: 17 },
+    { date: "2024-05-07", enrollments: 12 },
+    { date: "2024-05-08", enrollments: 25 },
+    { date: "2024-05-09", enrollments: 21 },
+    { date: "2024-05-10", enrollments: 19 },
+    { date: "2024-05-11", enrollments: 16 },
+    { date: "2024-05-12", enrollments: 23 },
+    { date: "2024-05-13", enrollments: 14 },
   ];
-
+  
   const courseData = [
     { courseId: "SE001", enrollments: 30 },
     { courseId: "SE002", enrollments: 25 },
     { courseId: "SE003", enrollments: 15 },
+    { courseId: "SE004", enrollments: 28 },
+    { courseId: "SE005", enrollments: 32 },
+    { courseId: "SE006", enrollments: 20 },
+    { courseId: "SE007", enrollments: 18 },
+    { courseId: "SE008", enrollments: 27 },
+    { courseId: "SE009", enrollments: 23 },
+    { courseId: "SE010", enrollments: 19 },
+    { courseId: "SE011", enrollments: 21 },
+    { courseId: "SE012", enrollments: 26 },
+    { courseId: "SE013", enrollments: 16 },
   ];
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -295,7 +315,7 @@ export default function MyCourses() {
           paddingTop: "60px",
           paddingBottom: "20px",
           fontWeight: "600"
-        }}>Hello {userDetails.firstName}! Track your progress here!</h2>
+        }}>Track your progress here!</h2>
         <div style={{
   padding: "20px",
   display: "flex",
