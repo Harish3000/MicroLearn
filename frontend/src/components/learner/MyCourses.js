@@ -90,7 +90,8 @@ export default function MyCourses() {
   };
 
   const unEnrollUser = () => {
-    console.log("Unenrolled");
+    console.log("Unenrolled")
+    
   };
 
   const handleMouseEnter = (index) => {
@@ -110,7 +111,7 @@ export default function MyCourses() {
       <h2
         style={{
           textAlign: "center",
-          fontSize: "35px",
+          fontSize: "30px",
           fontWeight: "bold",
           padding: "30px",
         }}
@@ -132,8 +133,10 @@ export default function MyCourses() {
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
+                height: "300px",
               }}
             >
+              {/* div here */}
               <div
                 style={{
                   width: "100%",
@@ -141,6 +144,7 @@ export default function MyCourses() {
                   boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
                   borderRadius: "10px",
                   backgroundColor: "#FFFFFF",
+                  height: "100%",
                 }}
               >
                 <img
@@ -151,10 +155,12 @@ export default function MyCourses() {
                     opacity: course.hovered ? 0.7 : 1,
                     transition: "opacity 0.7s",
                     borderRadius: "10px",
+                    objectFit: "cover",
+                    height: "80%",
                   }}
                 />
 
-                <div style={{ padding: "10px", textAlign: "center" }}>
+                <div style={{ padding: "10px", textAlign: "center"}}>
                   <div style={{ fontSize: "18px", fontWeight: "bold" }}>
                     {course.courseName}
                   </div>
