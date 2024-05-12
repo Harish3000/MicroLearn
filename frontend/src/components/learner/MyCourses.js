@@ -4,12 +4,14 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
 
 export default function MyCourses() {
   const [userDetails, setUserDetails] = useState(null);
   const [courseList, setCourseList] = useState(null);
   const [courseIdObjects, setCourseIdObjects] = useState([]);
   const [courseDetailsArray, setCourseDetailsArray] = useState([]);
+  const [learner, setLearner] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -85,14 +87,69 @@ export default function MyCourses() {
     fetchCourseDetails();
   }, [courseIdObjects]);
 
+  useEffect(() => {
+    const fetchLearner = async () => {
+      try {
+        if (userDetails && userDetails.userId) {
+          const response = await axios.get(
+            `/learner/get-one-learner/${userDetails.userId}`
+          );
+          setLearner(response.data); // Update the learner state
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching learner details:", error);
+      }
+    };
+
+    fetchLearner();
+  }, [userDetails]);
+
   const goToCoursePage = (courseId) => {
     navigate(`/instructor/course/${courseId}`);
   };
 
-  const unEnrollUser = () => {
-    console.log("Unenrolled")
-    
-  };
+  const unEnrollUser = async (courseId) => {
+    if (!userDetails || !courseId || !learner) {
+        console.error("User details, course ID, or learner data not available");
+        return;
+    }
+
+    const updatedCourseIdList = learner.courseIdList.filter(id => id !== courseId);
+
+    const updatedLearner = {
+        ...learner,
+        courseIdList: updatedCourseIdList,
+    };
+
+    try {
+        const unenrollmentResponse = await axios.post(
+            "/learner/create-learner",
+            updatedLearner
+        );
+
+        if (unenrollmentResponse.status === 200) {
+            notification.success({
+                message: "Unenrollment Successful",
+                description: "You have successfully unenrolled from the course!",
+            });
+            // Optionally, you can also update the course list to reflect the changes
+            setCourseDetailsArray(prevCourses => prevCourses.filter(course => course.courseId !== courseId));
+        } else {
+            throw new Error(
+                "Unenrollment failed with status: " + unenrollmentResponse.status
+            );
+        }
+    } catch (error) {
+        console.error("Error during unenrollment process:", error);
+        notification.error({
+            message: "Operation Failed",
+            description: "An error occurred during the unenrollment process. Please try again later.",
+        });
+    }
+};
+
+
 
   const handleMouseEnter = (index) => {
     const updatedCourseDetailsArray = [...courseDetailsArray];
@@ -136,7 +193,6 @@ export default function MyCourses() {
                 height: "300px",
               }}
             >
-              {/* div here */}
               <div
                 style={{
                   width: "100%",
@@ -193,7 +249,7 @@ export default function MyCourses() {
                         Go to Course
                       </button>
                       <button
-                        onClick={() => unEnrollUser()}
+                        onClick={() => unEnrollUser(course.courseId)}
                         style={{
                           color: "#FFFFFF",
                           borderRadius: "15px",

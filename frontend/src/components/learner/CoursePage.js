@@ -55,20 +55,21 @@ const CoursePage = () => {
 
   useEffect(() => {
     const fetchLearner = async () => {
-        try {
-            if (userDetails && userDetails.userId) {
-                const response = await axios.get(`/learner/get-one-learner/${userDetails.userId}`);
-                setLearner(response.data); // Update the learner state
-                console.log(response.data);
-            }
-        } catch(error) {
-            console.error("Error fetching learner details:", error);
+      try {
+        if (userDetails && userDetails.userId) {
+          const response = await axios.get(
+            `/learner/get-one-learner/${userDetails.userId}`
+          );
+          setLearner(response.data); // Update the learner state
+          console.log(response.data);
         }
+      } catch (error) {
+        console.error("Error fetching learner details:", error);
+      }
     };
 
     fetchLearner();
-}, [userDetails]);
-
+  }, [userDetails]);
 
   const handleEnrollment = async () => {
     if (!userDetails || !learner) {
@@ -91,14 +92,12 @@ const CoursePage = () => {
     const updatedCourseIdLearner = [...learner.courseIdList];
 
     if (!updatedCourseIdLearner.includes(courseId)) {
-      updatedCourseIdLearner.push(courseId); 
+      updatedCourseIdLearner.push(courseId);
 
       const newLearner = {
         ...learner,
-          courseIdList: updatedCourseIdLearner,
+        courseIdList: updatedCourseIdLearner,
       };
-
-      console.log(newLearner);
 
       try {
         const enrollmentResponse = await axios.post(
