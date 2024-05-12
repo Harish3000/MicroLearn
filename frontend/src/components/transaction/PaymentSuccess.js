@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Result, Button } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const customSpinner = (
   <LoadingOutlined style={{ fontSize: 64, color: "green" }} spin />
@@ -19,13 +20,16 @@ const PaymentProcessingModal = ({ visible }) => (
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
       {customSpinner}
-      <p style={{ marginTop: 16, fontWeight: "bold" }}>Payment processing...</p>
+      <p style={{ marginTop: 16, fontWeight: "bold" }}>
+        Validating your payment...
+      </p>
     </div>
   </Modal>
 );
 
 const PaymentSuccess = () => {
   const [processing, setProcessing] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,6 +38,10 @@ const PaymentSuccess = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleStartCourse = () => {
+    navigate("/learner");
+  };
 
   return (
     <>
@@ -46,8 +54,12 @@ const PaymentSuccess = () => {
               title="Payment Successful!"
               subTitle="Your Payment was successfully processed - Order number: 2017182818828182881. You can enroll into the course now."
               extra={[
-                <Button type="primary" key="console">
-                  Enroll Now !
+                <Button
+                  type="primary"
+                  key="console"
+                  onClick={handleStartCourse}
+                >
+                  Go to home page
                 </Button>,
               ]}
             />

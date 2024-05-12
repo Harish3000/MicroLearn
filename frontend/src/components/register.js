@@ -76,6 +76,23 @@ function Register() {
           role: role,
           date: getCurrentDate(),
         });
+
+        // Sending post request to create learner
+        const learnerData = {
+          learnerId: userId,
+          learnerName: fname,
+          email: email,
+          courseIdList: [],
+        };
+
+        await fetch("/learner/create-learner", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(learnerData),
+        });
+
         toast.success("User Registered Successfully!!", {
           position: "top-center",
         });

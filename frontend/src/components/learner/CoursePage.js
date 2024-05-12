@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Spin } from "antd";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-
 import { notification } from "antd";
 
 const CoursePage = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate(); // Import useNavigate hook
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
@@ -104,28 +104,36 @@ const CoursePage = () => {
 
         if (enrollmentResponse.status === 200) {
           notification.success({
-            message: "Enrollment Successful",
-            description: "You have successfully enrolled in the course!",
+            message: "Trial Enrollment successful",
+            description: "You have successfully activated trial course!",
           });
+
+          // Add a delay of 2 seconds
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+
+          const learnerResponse = await axios.post(
+            "/learner/create-learner",
+            newLearner
+          );
+
+          if (learnerResponse.status === 200) {
+            notification.success({
+              message: "Loading payment details...",
+              description: "Please wait...",
+            });
+
+            // Navigate to /transaction after 3 seconds
+            setTimeout(() => {
+              navigate("/transaction");
+            }, 2000);
+          } else {
+            throw new Error(
+              "Learner creation failed with status: " + learnerResponse.status
+            );
+          }
         } else {
           throw new Error(
             "Enrollment failed with status: " + enrollmentResponse.status
-          );
-        }
-
-        const learnerResponse = await axios.post(
-          "/learner/create-learner",
-          newLearner
-        );
-
-        if (learnerResponse.status === 200) {
-          notification.success({
-            message: "Learner Created",
-            description: "Learner profile has been created successfully!",
-          });
-        } else {
-          throw new Error(
-            "Learner creation failed with status: " + learnerResponse.status
           );
         }
       } catch (error) {

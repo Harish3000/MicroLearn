@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { notification } from "antd";
-import { useNavigate } from "react-router-dom";
 
 const PaymentForm = () => {
-  const navigate = useNavigate();
-
   const [paymentData, setPaymentData] = useState({
     paymentID: "",
     type: "",
@@ -12,7 +9,7 @@ const PaymentForm = () => {
     learnerName: "",
     email: "",
     amount: "",
-    date: new Date().toISOString().slice(0, 10), // Today's date
+    date: new Date().toISOString().slice(0, 10),
     courseId: "",
   });
 
@@ -23,7 +20,6 @@ const PaymentForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You can perform validation here before sending the data
     fetch("/transaction/payment", {
       method: "POST",
       headers: {
@@ -34,11 +30,12 @@ const PaymentForm = () => {
       .then((response) => {
         if (response.ok) {
           notification.success({
-            message: "Success!. Redirecting...",
+            message: "Redirecting to secure payment gateway. Please wait...",
             duration: 2,
           });
           setTimeout(() => {
-            navigate("/transaction/card");
+            window.location.href =
+              "https://buy.stripe.com/test_cN28yj4lH1EQ3TOcMN";
           }, 3000);
         } else {
           throw new Error("Failed to submit payment");
@@ -55,7 +52,6 @@ const PaymentForm = () => {
   };
 
   const handleCancel = () => {
-    // Perform any necessary action for cancelling, such as going back to the previous page
     window.history.back();
   };
 
