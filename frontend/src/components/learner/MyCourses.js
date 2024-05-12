@@ -89,26 +89,126 @@ export default function MyCourses() {
     navigate(`/instructor/course/${courseId}`);
   };
 
+  const unEnrollUser = () => {
+    console.log("Unenrolled");
+  };
+
+  const handleMouseEnter = (index) => {
+    const updatedCourseDetailsArray = [...courseDetailsArray];
+    updatedCourseDetailsArray[index].hovered = true;
+    setCourseDetailsArray(updatedCourseDetailsArray);
+  };
+
+  const handleMouseLeave = (index) => {
+    const updatedCourseDetailsArray = [...courseDetailsArray];
+    updatedCourseDetailsArray[index].hovered = false;
+    setCourseDetailsArray(updatedCourseDetailsArray);
+  };
+
   return (
     <div>
-      <h2>
+      <h2
+        style={{
+          textAlign: "center",
+          fontSize: "35px",
+          fontWeight: "bold",
+          padding: "30px",
+        }}
+      >
         My Courses
       </h2>
-      <div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         {courseDetailsArray.map((course, index) => (
-          <div key={index} >
-            <div>
-              <img
-                src={course.courseImage}
-                alt={course.courseName}
-              />
-              <div>
-                <button onClick={() => goToCoursePage(course.courseId)}>Go to Course</button>
-                <button >Unenroll</button>
+          <div
+            key={index}
+            style={{ width: "30%", margin: "10px", position: "relative" }}
+          >
+            <div
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={() => handleMouseLeave(index)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  padding: "20px",
+                  boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
+                  borderRadius: "10px",
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <img
+                  src={course.courseImage}
+                  alt={course.courseName}
+                  style={{
+                    width: "100%",
+                    opacity: course.hovered ? 0.7 : 1,
+                    transition: "opacity 0.7s",
+                    borderRadius: "10px",
+                  }}
+                />
+
+                <div style={{ padding: "10px", textAlign: "center" }}>
+                  <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+                    {course.courseName}
+                  </div>
+                  {course.hovered && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        textAlign: "center",
+                      }}
+                    >
+                      <button
+                        onClick={() => goToCoursePage(course.courseId)}
+                        style={{
+                          color: "#FFFFFF",
+                          backgroundColor: "#000000",
+                          border: "2px solid #1A1A1A",
+                          borderRadius: "15px",
+                          boxSizing: "border-box",
+                          cursor: "pointer",
+                          display: "inline-block",
+                          fontSize: "20px",
+                          fontWeight: "600",
+                          textAlign: "center",
+                          padding: "12px 20px",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        Go to Course
+                      </button>
+                      <button
+                        onClick={() => unEnrollUser()}
+                        style={{
+                          color: "#FFFFFF",
+                          backgroundColor: "Red",
+                          border: "2px solid #red",
+                          borderRadius: "15px",
+                          boxSizing: "border-box",
+                          cursor: "pointer",
+                          display: "inline-block",
+                          fontSize: "20px",
+                          fontWeight: "600",
+                          textAlign: "center",
+                          padding: "12px 20px",
+                        }}
+                      >
+                        Unenroll
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div>
-              <div>{course.courseName}</div>
             </div>
           </div>
         ))}
