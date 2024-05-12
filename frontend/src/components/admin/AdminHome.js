@@ -52,13 +52,13 @@ const AdminHome = () => {
         <Rectangle
           title="Enrollments"
           text="Manage Enrollments"
-          link="/admin/AdminHome/users"
+          link="/admin/enrollment"
           icon="👥"
         />
         <Rectangle
           title="Transactions"
           text="View user transactions"
-          link="/transaction/paymentdata" // Updated link here
+          link="/transaction/paymentdata"
           icon="💰"
         />
       </div>
