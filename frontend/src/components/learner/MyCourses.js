@@ -178,8 +178,6 @@ export default function MyCourses() {
                         onClick={() => goToCoursePage(course.courseId)}
                         style={{
                           color: "#FFFFFF",
-                          backgroundColor: "#000000",
-                          border: "2px solid #1A1A1A",
                           borderRadius: "15px",
                           boxSizing: "border-box",
                           cursor: "pointer",
@@ -190,6 +188,7 @@ export default function MyCourses() {
                           padding: "12px 20px",
                           marginBottom: "20px",
                         }}
+                        className="bg-green-500"
                       >
                         Go to Course
                       </button>
@@ -197,8 +196,6 @@ export default function MyCourses() {
                         onClick={() => unEnrollUser()}
                         style={{
                           color: "#FFFFFF",
-                          backgroundColor: "Red",
-                          border: "2px solid #red",
                           borderRadius: "15px",
                           boxSizing: "border-box",
                           cursor: "pointer",
@@ -207,7 +204,9 @@ export default function MyCourses() {
                           fontWeight: "600",
                           textAlign: "center",
                           padding: "12px 20px",
+                          marginBottom: "20px",
                         }}
+                        className="bg-red-500"
                       >
                         Unenroll
                       </button>
