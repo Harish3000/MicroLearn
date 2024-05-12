@@ -14,6 +14,7 @@ const CoursePage = () => {
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState(null);
   const [courseIdLearner, setCourseIdLearner] = useState([]);
+  const [learner, setLearner] = useState(null);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -52,9 +53,26 @@ const CoursePage = () => {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    const fetchLearner = async () => {
+        try {
+            if (userDetails && userDetails.userId) {
+                const response = await axios.get(`/learner/get-one-learner/${userDetails.userId}`);
+                setLearner(response.data); // Update the learner state
+                console.log(response.data);
+            }
+        } catch(error) {
+            console.error("Error fetching learner details:", error);
+        }
+    };
+
+    fetchLearner();
+}, [userDetails]);
+
+
   const handleEnrollment = async () => {
-    if (!userDetails) {
-      console.error("User details not available");
+    if (!userDetails || !learner) {
+      console.error("User details or learner details not available");
       return;
     }
 
@@ -69,15 +87,15 @@ const CoursePage = () => {
       courseId,
       paymentId,
     };
-    if (!courseIdLearner.includes(courseId)) {
-      const updatedCourseIdLearner = [...courseIdLearner, courseId];
-      setCourseIdLearner(updatedCourseIdLearner);
+
+    const updatedCourseIdLearner = [...learner.courseIdList];
+
+    if (!updatedCourseIdLearner.includes(courseId)) {
+      updatedCourseIdLearner.push(courseId); 
 
       const newLearner = {
-        learnerId,
-        learnerName,
-        email,
-        courseIdList: updatedCourseIdLearner,
+        ...learner,
+          courseIdList: updatedCourseIdLearner,
       };
 
       console.log(newLearner);
