@@ -30,6 +30,7 @@ function Users() {
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [roleOptions, setRoleOptions] = useState(["Instructor", "Learner"]);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [searchText, setSearchText] = useState(""); // Added state for search text
 
   useEffect(() => {
     const fetchData = async () => {
@@ -209,9 +210,25 @@ function Users() {
     },
   ];
 
+  const filteredData = data.filter((item) =>
+    Object.values(item).some(
+      (value) =>
+        typeof value === "string" &&
+        value.toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="w-4/5 p-10 bg-white rounded shadow-xl">
+        <div className="flex justify-end mb-4">
+          <Input
+            placeholder="Search..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 200 }}
+          />
+        </div>
         {isLoadingData ? (
           <div className="text-center">
             <Spin size="large" />
@@ -219,7 +236,7 @@ function Users() {
         ) : (
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={filteredData}
             rowKey="userId"
             scroll={{ y: 500 }}
             pagination={false}
